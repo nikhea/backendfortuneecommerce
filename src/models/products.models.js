@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const availabilitySchema = new Schema({
   inStock: {
     type: Boolean,
-    required: true,
+    default: true,
   },
   quantity: {
     type: Number,
@@ -65,22 +65,23 @@ const productSchema = new Schema(
       ref: "Subcategory",
       required: true,
     },
-    brand: {
-      type: String,
-      required: true,
-    },
     rating: {
       type: Number,
       default: 0,
     },
-    reviews: [reviewSchema],
-    tags: [String],
-    relatedProducts: [
+    reviews: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "Product",
+        ref: "Review",
       },
     ],
+    // tags: [String],
+    // relatedProducts: [
+    //   {
+    //     type: mongoose.Types.ObjectId,
+    //     ref: "Product",
+    //   },
+    // ],
     discounts: [
       {
         code: String,

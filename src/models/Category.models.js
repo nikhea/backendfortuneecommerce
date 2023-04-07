@@ -17,7 +17,7 @@ const categorySchema = new Schema(
     },
     coverPhoto: {
       type: String,
-      required: true,
+      required: false,
     },
     subcategories: [
       {
@@ -36,3 +36,5 @@ const categorySchema = new Schema(
 );
 
 const Category = mongoose.model("Category", categorySchema);
+
+export default Category;

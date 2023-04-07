@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const reviewSchema = Schema({
+const reviewSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -22,6 +22,6 @@ const reviewSchema = Schema({
   },
 });
 
-const review = mongoose.model("Product", reviewSchema);
+const review = mongoose.model("Review", reviewSchema);
 
 export default review;

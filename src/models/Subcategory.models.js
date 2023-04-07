@@ -12,13 +12,13 @@ const subcategorySchema = new Schema(
     },
     description: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
       maxlength: 1000,
     },
     coverPhoto: {
       type: String,
-      required: true,
+      required: false,
     },
     products: [
       {
