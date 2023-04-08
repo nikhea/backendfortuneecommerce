@@ -5,15 +5,16 @@ import {
   removeOneCategories,
   getOneCategories,
 } from "../controllers/category.controller.js";
-
+import { loginRequired } from "../middleware/authtication.js";
+import { ensureAdmin } from "../middleware/roleValidation.js";
 const router = express.Router();
 
-router.get("/category", getAllCategories);
+router.get("/category", loginRequired, ensureAdmin, getAllCategories);
 
-router.post("/category", CreateCategory);
+router.post("/category", loginRequired, ensureAdmin, CreateCategory);
 // router.put("/products", updateOneProduct);
 
 router.get("/category/:name", getOneCategories);
-router.delete("/category/:id", removeOneCategories);
+router.delete("/category/:id", loginRequired, removeOneCategories);
 
 export default router;

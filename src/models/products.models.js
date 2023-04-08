@@ -1,20 +1,23 @@
 import * as mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const availabilitySchema = new Schema({
-  inStock: {
-    type: Boolean,
-    default: true,
+const availabilitySchema = new Schema(
+  {
+    inStock: {
+      type: Boolean,
+      default: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
+    deliveryDate: {
+      type: Date,
+      required: true,
+    },
   },
-  quantity: {
-    type: Number,
-    required: true,
-  },
-  deliveryDate: {
-    type: Date,
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 const productSchema = new Schema(
   {

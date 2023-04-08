@@ -1,8 +1,5 @@
-export const main_URL = "https://backendfortuneestate.onrender.com/api/";
-
 export const roles = {
   admin: "ADMIN",
-  agent: "AGENT",
-  subscriber: "SUBSCRIBER",
+  customer: "customer",
 };
 export const priceSymbol = "$";

@@ -1,25 +1,22 @@
 import * as mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import validator from "validator";
+import { roles } from "../utils/constants.js";
 const Schema = mongoose.Schema;
-const userSchema = new Schema(
+const UserSchema = new Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-      trim: true,
-      maxlength: 32,
-    },
-    lastName: {
-      type: String,
-      required: true,
-      trim: true,
-      maxlength: 32,
-    },
     email: {
       type: String,
       required: true,
       unique: true,
       trim: true,
       lowercase: true,
+      max: 100,
+      validate: (value) => {
+        if (!validator.isEmail(value)) {
+          throw new Error({ error: "Invalid Email address" });
+        }
+      },
     },
     password: {
       type: String,
@@ -27,8 +24,8 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      enum: ["customer", "admin"],
+      default: "customer",
     },
     cart: {
       type: mongoose.Schema.Types.ObjectId,
@@ -38,6 +35,29 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+UserSchema.pre("save", async function (next) {
+  try {
+    if (!this.isModified("password")) {
+      return next();
+    }
+    let hashedPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashedPassword;
+    if (this.email === process.env.ADMIN_EMAIL.toLowerCase())
+      this.role = roles.admin;
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
+UserSchema.methods.comparePassword = async function (candidatePassword, next) {
+  try {
+    let isMatch = await bcrypt.compare(candidatePassword, this.password);
+    return isMatch;
+  } catch (err) {
+    return next(err);
+  }
+};
+const User = mongoose.model("User", UserSchema);
 
 export default User;

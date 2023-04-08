@@ -1,18 +1,21 @@
 import * as mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const orderItemSchema = new mongoose.Schema({
-  product: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    required: true,
+const orderItemSchema = new mongoose.Schema(
+  {
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
   },
-  quantity: {
-    type: Number,
-    required: true,
-    min: 1,
-  },
-});
+  { timestamps: true }
+);
 
 const orderSchema = new Schema(
   {

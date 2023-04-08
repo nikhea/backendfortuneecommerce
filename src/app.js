@@ -5,9 +5,11 @@ import cors from "cors";
 import { db } from "./db/index.js";
 import morgan from "morgan";
 // import errorHandler from "./middleware/errorHandler.js";
+import Auth from "./routes/auth.routes.js";
 import Products from "./routes/product.routes.js";
 import SubCategory from "./routes/subCategory.routes.js";
 import Category from "./routes/category.routes.js";
+import Review from "./routes/review.routes.js";
 const app = express();
 app.get("/", (req, res) => {
   try {
@@ -32,7 +34,10 @@ app.use(cors());
 app.options("*", cors());
 app.use(morgan("tiny"));
 // app.use(errorHandler);
+app.use("/api/auth", Auth);
 app.use("/api/", Products);
 app.use("/api/", Category);
 app.use("/api/", SubCategory);
+// app.use("/api/", Review);
+
 export default app;
