@@ -1,4 +1,4 @@
-import Product from "../models/products.models.js";
+import Products from "../models/products.models.js";
 import Category from "../models/Category.models.js";
 import Subcategory from "../models/Subcategory.models.js";
 export const createProduct = async (req, res, next) => {
@@ -21,8 +21,7 @@ export const createProduct = async (req, res, next) => {
 
     const exsitCategory = await Category.findOne({ name: category });
     const exsitSubCategory = await Subcategory.findOne({ name: subcategory });
-
-    const product = await Product.create({
+    const Product = new Products({
       name,
       description,
       price,
@@ -32,11 +31,14 @@ export const createProduct = async (req, res, next) => {
       coverPhoto,
       specifications,
       availability,
-      category: exsitCategory,
-      subcategory: exsitSubCategory,
+      category: exsitCategory._id,
+      subcategory: exsitSubCategory._id,
       review,
       features,
     });
+    const product = await Product.save();
+    exsitSubCategory.products.push(product);
+    await exsitSubCategory.save();
     let response = {
       success: "true",
       statuscode: 201,
@@ -57,7 +59,7 @@ export const createProduct = async (req, res, next) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find()
+    const products = await Products.find()
       .populate("category")
       .populate("subcategory");
     let response = {
@@ -81,7 +83,7 @@ export const getAllProducts = async (req, res) => {
 export const getOneProduct = async (req, res, next) => {
   const id = req.params.id;
   try {
-    const product = await Product.findById(id)
+    const product = await Products.findById(id)
       .populate("category")
       .populate("subcategory");
     if (!product) return res.status(404).json({ message: "Product not found" });
@@ -101,7 +103,7 @@ export const getOneProduct = async (req, res, next) => {
 export const updateOneProduct = async (req, res, next) => {
   const id = req.params.id;
   try {
-    const product = await Product.findByIdAndUpdate(id);
+    const product = await Products.findByIdAndUpdate(id);
     if (!product) {
       let response = {
         statuscode: 400,
@@ -111,7 +113,7 @@ export const updateOneProduct = async (req, res, next) => {
       };
       return res.json(response);
     }
-    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+    const updatedProduct = await Products.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     let response = {
@@ -135,7 +137,7 @@ export const updateOneProduct = async (req, res, next) => {
 export const removeOneProduct = async (req, res, next) => {
   const id = req.params.id;
   try {
-    const product = await Product.findByIdAndRemove(id);
+    const product = await Products.findByIdAndRemove(id);
     // if (!product) return res.status(404).json({ message: "Product not found" });
     // await product.remove();
     let response = {
