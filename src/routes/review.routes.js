@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-// router.get("/subcategory", getAllSubCategories);
+router.get("/review", getAllReview);
 
 // router.post("/subcategory", CreateSubCategory);
 // // router.put("/products", updateOneProduct);

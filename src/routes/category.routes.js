@@ -9,7 +9,11 @@ import { loginRequired } from "../middleware/authtication.js";
 import { ensureAdmin } from "../middleware/roleValidation.js";
 const router = express.Router();
 
-router.get("/category", loginRequired, ensureAdmin, getAllCategories);
+router.get(
+  "/category",
+  //  loginRequired, ensureAdmin,
+  getAllCategories
+);
 
 router.post("/category", loginRequired, ensureAdmin, CreateCategory);
 // router.put("/products", updateOneProduct);

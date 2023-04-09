@@ -10,7 +10,8 @@ import Auth from "./routes/auth.routes.js";
 import Products from "./routes/product.routes.js";
 import SubCategory from "./routes/subCategory.routes.js";
 import Category from "./routes/category.routes.js";
-import Review from "./routes/review.routes.js";
+import Cart from "./routes/cart.routes.js";
+// import Review from "./routes/review.routes.js";
 const app = express();
 app.get("/", (req, res) => {
   try {
@@ -40,6 +41,7 @@ app.use("/api/user", Users);
 app.use("/api/", Products);
 app.use("/api/", Category);
 app.use("/api/", SubCategory);
+app.use("/api/", Cart);
 // app.use("/api/", Review);
 
 export default app;
