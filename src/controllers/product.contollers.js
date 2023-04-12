@@ -17,6 +17,7 @@ export const createProduct = async (req, res, next) => {
       subcategory,
       review,
       features,
+      rating,
     } = req.body;
 
     const exsitCategory = await Category.findOne({ name: category });
@@ -35,6 +36,7 @@ export const createProduct = async (req, res, next) => {
       subcategory: exsitSubCategory._id,
       review,
       features,
+      rating,
     });
     const product = await Product.save();
     exsitSubCategory.products.push(product);

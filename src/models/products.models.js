@@ -37,6 +37,16 @@ const productSchema = new Schema(
       type: Number,
       required: true,
     },
+    priceSymbol: {
+      type: String,
+      required: false,
+      default: "$",
+    },
+    currency: {
+      type: String,
+      required: false,
+      default: "USD",
+    },
     quantity: {
       type: Number,
       required: true,
@@ -70,6 +80,7 @@ const productSchema = new Schema(
     },
     rating: {
       type: Number,
+      // required: true,
       default: 0,
     },
     reviews: [
