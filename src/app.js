@@ -12,7 +12,7 @@ import SubCategory from "./routes/subCategory.routes.js";
 import Category from "./routes/category.routes.js";
 import Cart from "./routes/cart.routes.js";
 import Wishlist from "./routes/wishlist.routes.js";
-
+import Compare from "./routes/compare.routes.js";
 // import Review from "./routes/review.routes.js";
 const app = express();
 app.get("/", (req, res) => {
@@ -42,6 +42,7 @@ app.use("/api/auth", Auth);
 app.use("/api/user", Users);
 app.use("/api/products", Products);
 app.use("/api/wishlist", Wishlist);
+app.use("/api/compare", Compare);
 app.use("/api/", Category);
 app.use("/api/", SubCategory);
 app.use("/api/", Cart);
