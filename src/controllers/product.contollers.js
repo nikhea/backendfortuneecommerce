@@ -40,7 +40,9 @@ export const createProduct = async (req, res, next) => {
     });
     const product = await Product.save();
     exsitSubCategory.products.push(product);
+    exsitCategory.products.push(product);
     await exsitSubCategory.save();
+    await exsitCategory.save();
     let response = {
       success: "true",
       statuscode: 201,
@@ -99,6 +101,31 @@ export const getOneProduct = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getProductByName = async (req, res, next) => {
+  const p = new RegExp("^" + req.params.name + "$", "i");
+
+  try {
+    const product = await Products.findOne({ name: p })
+      .populate("category")
+      .populate("subcategory");
+    let response = {
+      success: "true",
+      statuscode: 200,
+      data: product,
+      message: "success",
+    };
+    res.json(response);
+  } catch (error) {
+    let response = {
+      statuscode: 400,
+      data: [],
+      error: [error],
+      message: "something failed",
+    };
+    return res.json(response);
   }
 };
 

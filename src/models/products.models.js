@@ -78,6 +78,11 @@ const productSchema = new Schema(
       ref: "Subcategory",
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["in stock", "out of stock", "being restocked"],
+      default: "in stock",
+    },
     rating: {
       type: Number,
       // required: true,

@@ -21,7 +21,6 @@ export const CreateSubCategory = async (req, res) => {
       });
 
       const subcategory = await subCategory.save();
-      console.log(subcategory);
       categories.subcategories.push(subcategory);
       await categories.save();
       let response = {
