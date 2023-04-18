@@ -3,11 +3,10 @@ const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema(
   {
-    name: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-      trim: true,
-      maxlength: 64,
     },
     rating: {
       type: Number,
