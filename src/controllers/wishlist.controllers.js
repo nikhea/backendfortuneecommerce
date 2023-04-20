@@ -6,10 +6,16 @@ export const getOwnerWishlist = async (req, res, next) => {
     let wishlist = await Wishlist.find({ user: user })
       .populate("product")
       .populate("user", "-password");
+
+    const transformedData = wishlist.map(({ _id, product }) => ({
+      _id,
+      product,
+    }));
+
     let response = {
       success: "true",
       statuscode: 200,
-      data: wishlist,
+      data: transformedData,
       message: "success",
     };
     res.json(response);
