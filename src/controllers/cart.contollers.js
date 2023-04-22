@@ -3,7 +3,6 @@ import Product from "../models/products.models.js";
 export const createCart = async (req, res) => {
   const { items } = req.body;
   const user = req.user._id;
-
   try {
     const product = await Product.findById(items.product);
 
@@ -65,7 +64,6 @@ export const getAllCart = async (req, res) => {
       data: carts,
       message: "successfully",
     };
-    console.log(response);
     return res.status(200).json(response);
   } catch (error) {
     console.error(error);
@@ -73,11 +71,11 @@ export const getAllCart = async (req, res) => {
   }
 };
 
-export const updateCartItem = async (req, res) => {
-  const { itemId } = req.params;
+export const increaseCartItemQuantity = async (req, res) => {
+  const { itemId, type } = req.params;
   const { quantity } = req.body;
   const user = req.user._id;
-
+  console.log(quantity);
   try {
     const cart = await Cart.findOne({ user });
 
@@ -97,14 +95,53 @@ export const updateCartItem = async (req, res) => {
         .status(400)
         .json({ message: "Quantity cannot be less than one" });
     }
-    cart.items[itemIndex].quantity = quantity;
+    cart.items[itemIndex].quantity = quantity + 1;
     await cart.save();
 
     return res.status(200).json({
       success: true,
       statuscode: 200,
       data: cart,
-      message: "Item quantity updated successfully",
+      message: "quantity updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const decreaseCartItemQuantity = async (req, res) => {
+  const { itemId, type } = req.params;
+  const { quantity } = req.body;
+  const user = req.user._id;
+  console.log(quantity);
+  try {
+    const cart = await Cart.findOne({ user });
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    const itemIndex = cart.items.findIndex(
+      (item) => item._id.toString() === itemId
+    );
+
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: "Item not found in cart" });
+    }
+    if (quantity < 1) {
+      return res
+        .status(400)
+        .json({ message: "Quantity cannot be less than one" });
+    }
+    cart.items[itemIndex].quantity = quantity - 1;
+    await cart.save();
+
+    return res.status(200).json({
+      success: true,
+      statuscode: 200,
+      data: cart,
+      message: "quantity updated successfully",
     });
   } catch (error) {
     console.error(error);
@@ -160,7 +197,7 @@ export const removeCartItem = async (req, res) => {
       success: true,
       statuscode: 200,
       data: cart,
-      message: "Item removed from cart successfully",
+      message: "Item removed from cart",
     });
   } catch (error) {
     console.error(error);
