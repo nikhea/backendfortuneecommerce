@@ -11,6 +11,7 @@ export const getOwnerWishlist = async (req, res, next) => {
       _id,
       product,
     }));
+    // const wishlist = res.paginatedResults;
 
     let response = {
       success: "true",
@@ -36,7 +37,14 @@ export const createOwnerWishlist = async (req, res, next) => {
   try {
     let exsitedwishlistItem = await Wishlist.findOne({ product: productId });
     if (exsitedwishlistItem) {
-      return res.status(409).send("Product already in wishlist");
+      // return res.status(409).send("Product already in wishlist");
+      let response = {
+        success: "true",
+        statuscode: 409,
+        // data: wishlist,
+        message: "Product already in wishlist",
+      };
+      res.json(response);
     } else {
       const wishlist = new Wishlist({
         user: user,
@@ -47,7 +55,7 @@ export const createOwnerWishlist = async (req, res, next) => {
         success: "true",
         statuscode: 201,
         data: wishlist,
-        message: "success",
+        message: "product added to wishlist",
       };
       res.json(response);
     }
@@ -70,7 +78,7 @@ export const removeOwnerWishlist = async (req, res, next) => {
       success: "true",
       statuscode: 200,
       data: wishlist,
-      message: "removed successfully",
+      message: "product removed successfully",
     };
     res.json(response);
   } catch (error) {
