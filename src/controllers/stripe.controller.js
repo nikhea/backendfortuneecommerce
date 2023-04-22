@@ -4,6 +4,11 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const checkOut = async (req, res) => {
+  // Set the Access-Control-Allow-Origin header to allow requests from 'https://fortune-ecommerce.vercel.app'
+  res.set(
+    "Access-Control-Allow-Origin",
+    "https://fortune-ecommerce.vercel.app"
+  );
   const { cartItem } = req.body;
   const user = req.user;
 
