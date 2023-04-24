@@ -7,6 +7,12 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const checkOut = async (req, res) => {
+  // Set the Access-Control-Allow-Origin header to allow requests from 'https://fortune-ecommerce.vercel.app'
+  res.set(
+    "Access-Control-Allow-Origin",
+    "https://fortune-ecommerce.vercel.app"
+  );
+
   const { cartItem, user } = req.body;
   // const user = req.user;
   let cartId = cartItem[0]._id;
@@ -54,11 +60,9 @@ export const checkOut = async (req, res) => {
   res.send({ url: session.url });
 };
 
-const createOrder = async (customer, items, data) => {
-  console.log("createorder");
+const createOrder = async (res, customer, items, data) => {
   const userId = customer.metadata.userId;
   const cartItems = JSON.parse(customer.metadata.items);
-
   const newOrder = new Order({
     user: userId,
     customerId: data.customer,
@@ -75,7 +79,6 @@ const createOrder = async (customer, items, data) => {
   try {
     const order = await newOrder.save();
     if (order) {
-      console.log("logd order", order);
       const cartItems = await Cart.find({ user: userId });
       await Cart.deleteMany({ user: userId });
       let response = {
@@ -99,8 +102,8 @@ const createOrder = async (customer, items, data) => {
   }
 };
 
-let endpointSecret;
-// endpointSecret = process.env.ENDPOINT_SECRET;
+// let endpointSecret;
+const endpointSecret = process.env.ENDPOINT_SECRET;
 export const webHook = async (request, response) => {
   const sig = request.headers["stripe-signature"];
 
@@ -129,7 +132,7 @@ export const webHook = async (request, response) => {
       const items = await stripe.checkout.sessions.listLineItems(data.id);
       const customer = await stripe.customers.retrieve(data.customer);
 
-      createOrder(customer, items, data);
+      createOrder(response, customer, items, data);
     } catch (error) {
       console.log(error);
     }
