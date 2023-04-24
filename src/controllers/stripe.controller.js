@@ -137,8 +137,6 @@ export const webHook = async (request, response) => {
       console.log(error);
     }
   }
-
-  // Return a 200 response to acknowledge receipt of the event
   response.send().end();
 };
 // stripe.customers

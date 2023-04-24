@@ -11,22 +11,22 @@ import { loginRequired } from "../middleware/authtication.js";
 import { ensureAdmin, ensureCustomer } from "../middleware/roleValidation.js";
 const router = express.Router();
 
-router.get("/carts", loginRequired, ensureCustomer, getAllCart);
+router.get("/", loginRequired, ensureCustomer, getAllCart);
 
-router.post("/carts", loginRequired, ensureCustomer, createCart);
+router.post("/", loginRequired, ensureCustomer, createCart);
 router.patch(
-  "/carts/:itemId/increase",
+  "/:itemId/increase",
   loginRequired,
   ensureCustomer,
   increaseCartItemQuantity
 );
 router.patch(
-  "/carts/:itemId/decrease",
+  "/:itemId/decrease",
   loginRequired,
   ensureCustomer,
   decreaseCartItemQuantity
 );
 
-router.delete("/carts/:cartId/empty", loginRequired, ensureCustomer, clearCart);
-router.delete("/carts/:itemId", loginRequired, ensureCustomer, removeCartItem);
+router.delete("/:cartId/empty", loginRequired, ensureCustomer, clearCart);
+router.delete("/:itemId", loginRequired, ensureCustomer, removeCartItem);
 export default router;

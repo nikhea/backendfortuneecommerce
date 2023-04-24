@@ -8,12 +8,12 @@ import {
 
 const router = express.Router();
 
-router.get("/subcategory", getAllSubCategories);
+router.get("/", getAllSubCategories);
 
-router.post("/subcategory", CreateSubCategory);
+router.post("/", CreateSubCategory);
 // router.put("/products", updateOneProduct);
 
-router.get("/subcategory/:name", getOneSubCategories);
-router.delete("/subcategory/:id", removeOneSubCategories);
+router.get("/:name", getOneSubCategories);
+router.delete("/:id", removeOneSubCategories);
 
 export default router;

@@ -46,11 +46,11 @@ app.use("/api/user", Users);
 app.use("/api/products", Products);
 app.use("/api/wishlist", Wishlist);
 app.use("/api/compare", Compare);
-app.use("/api/order", Order);
+app.use("/api/orders", Order);
 app.use("/api/stripe", StripeRoute);
-app.use("/api/", Category);
-app.use("/api/", SubCategory);
-app.use("/api/", Cart);
+app.use("/api/category", Category);
+app.use("/api/subcategory", SubCategory);
+app.use("/api/carts", Cart);
 // app.use("/api/", Review);
 
 export default app;

@@ -10,15 +10,15 @@ import { ensureAdmin } from "../middleware/roleValidation.js";
 const router = express.Router();
 
 router.get(
-  "/category",
+  "/",
   //  loginRequired, ensureAdmin,
   getAllCategories
 );
 
-router.post("/category", loginRequired, ensureAdmin, CreateCategory);
+router.post("/", loginRequired, ensureAdmin, CreateCategory);
 // router.put("/products", updateOneProduct);
 
-router.get("/category/:name", getOneCategories);
-router.delete("/category/:id", loginRequired, removeOneCategories);
+router.get("/:name", getOneCategories);
+router.delete("/:id", loginRequired, removeOneCategories);
 
 export default router;
