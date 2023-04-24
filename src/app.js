@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config();
 import express from "express";
+import bodyParser from "body-parser";
 import cors from "cors";
 import { db } from "./db/index.js";
 import morgan from "morgan";
@@ -14,8 +15,9 @@ import Cart from "./routes/cart.routes.js";
 import Wishlist from "./routes/wishlist.routes.js";
 import Compare from "./routes/compare.routes.js";
 import Order from "./routes/order.routes.js";
-
 import StripeRoute from "./routes/stripe.routes.js";
+import StripeHookRoute from "./routes/stripeHook.routes.js";
+
 // import Review from "./routes/review.routes.js";
 const app = express();
 app.get("/", (req, res) => {
@@ -47,10 +49,12 @@ app.use("/api/products", Products);
 app.use("/api/wishlist", Wishlist);
 app.use("/api/compare", Compare);
 app.use("/api/orders", Order);
-app.use("/api/stripe", StripeRoute);
+// app.use("/api/stripe", StripeRoute);
 app.use("/api/category", Category);
 app.use("/api/subcategory", SubCategory);
 app.use("/api/carts", Cart);
 // app.use("/api/", Review);
+app.use("/api/stripe", StripeRoute);
+app.use("/stripe//webhook", bodyParser.raw({ type: "*/*" }), StripeHookRoute);
 
 export default app;
