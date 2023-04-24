@@ -55,6 +55,7 @@ app.use("/api/subcategory", SubCategory);
 app.use("/api/carts", Cart);
 // app.use("/api/", Review);
 app.use("/api/stripe", StripeRoute);
-app.use("/stripe//webhook", bodyParser.raw({ type: "*/*" }), StripeHookRoute);
+app.use("api/stripe/webhook", bodyParser.raw({ type: "*/*" }), StripeHookRoute);
+// api/stripe/webhook
 
 export default app;
