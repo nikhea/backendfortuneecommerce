@@ -20,6 +20,7 @@
     "mongoose": "^7.0.3",
     "morgan": "^1.10.0",
     "nanoid": "^4.0.2",
+    "raw-body": "^2.5.2",
     "stripe": "^12.2.0",
     "validator": "^13.9.0"
   }

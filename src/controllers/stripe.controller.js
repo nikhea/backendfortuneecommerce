@@ -2,6 +2,8 @@ import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-
 dotenv.config();
 import Order from "../models/orders.models.js";
 import Cart from "../models/cart.models.js";
+import getRawBody from "raw-body";
+
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
@@ -105,7 +107,7 @@ const createOrder = async (res, customer, items, data) => {
 const endpointSecret = process.env.ENDPOINT_SECRET;
 export const webHook = async (request, response) => {
   const sig = request.headers["stripe-signature"];
-  const payload = request.body;
+  const payload = await getRawBody(request.body);
 
   let data;
   let eventType;
