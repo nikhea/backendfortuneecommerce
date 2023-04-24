@@ -38,6 +38,7 @@ app.get("/", (req, res) => {
 
 // Init Middleware
 app.use(express.json({ extended: false, limit: "50mb" }));
+
 app.use(express.urlencoded({ extended: false, limit: "50mb" }));
 app.use(cors());
 app.options("*", cors());
@@ -55,7 +56,11 @@ app.use("/api/subcategory", SubCategory);
 app.use("/api/carts", Cart);
 // app.use("/api/", Review);
 app.use("/api/stripe", StripeRoute);
-app.use("api/stripe/webhook", bodyParser.raw({ type: "*/*" }), StripeHookRoute);
+app.use(
+  "/api/stripe/webhook",
+  bodyParser.raw({ type: "*/*" }),
+  StripeHookRoute
+);
 // api/stripe/webhook
 
 export default app;
