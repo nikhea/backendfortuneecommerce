@@ -24,45 +24,22 @@ const orderSchema = new Schema(
       ref: "User",
       required: true,
     },
+    customerId: { type: String },
+    paymentIntentId: { type: String },
     items: [orderItemSchema],
-    status: {
+    subtotal: { type: Number, required: true },
+    total: { type: Number, required: true },
+    shipping: { type: Object, required: true },
+    deliveryStatus: {
       type: String,
       enum: ["pending", "processing", "shipped", "delivered"],
       default: "pending",
     },
-    shippingAddress: {
-      street: {
-        type: String,
-        required: true,
-      },
-      city: {
-        type: String,
-        required: true,
-      },
-      state: {
-        type: String,
-        required: true,
-      },
-      country: {
-        type: String,
-        required: true,
-      },
-      zip: {
-        type: String,
-        required: true,
-      },
-    },
-    paymentMethod: {
+    paymentStatus: {
       type: String,
-      enum: ["credit card", "debit card", "paypal"],
       required: true,
     },
-    paymentResult: {
-      id: String,
-      status: String,
-      update_time: String,
-      email_address: String,
-    },
+    status: { type: String, required: true },
   },
   { timestamps: true }
 );
@@ -70,3 +47,42 @@ const orderSchema = new Schema(
 const Order = mongoose.model("Order", orderSchema);
 
 export default Order;
+
+// status: {
+//   type: String,
+//   enum: ["pending", "processing", "shipped", "delivered"],
+//   default: "pending",
+// },
+// shippingAddress: {
+//   street: {
+//     type: String,
+//     required: true,
+//   },
+//   city: {
+//     type: String,
+//     required: true,
+//   },
+//   state: {
+//     type: String,
+//     required: true,
+//   },
+//   country: {
+//     type: String,
+//     required: true,
+//   },
+//   zip: {
+//     type: String,
+//     required: true,
+//   },
+// },
+// paymentMethod: {
+//   type: String,
+//   enum: ["credit card", "debit card", "paypal"],
+//   required: true,
+// },
+// paymentResult: {
+//   id: String,
+//   status: String,
+//   update_time: String,
+//   email_address: String,
+// },

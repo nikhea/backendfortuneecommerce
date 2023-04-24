@@ -1,40 +1,25 @@
 import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config();
+import Order from "../models/orders.models.js";
+import Cart from "../models/cart.models.js";
+
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const checkOut = async (req, res) => {
-  // Set the Access-Control-Allow-Origin header to allow requests from 'https://fortune-ecommerce.vercel.app'
-  // res.set(
-  //   "Access-Control-Allow-Origin",
-  //   "https://fortune-ecommerce.vercel.app"
-  // );
   const { cartItem, user } = req.body;
   // const user = req.user;
   let cartId = cartItem[0]._id;
   const cart = cartItem.map((item) => {
     return {
-      price_data: {
-        currency: "usd",
-        product_data: {
-          id: item.product._id,
-          // name: item.product.name,
-          // images: [item.product.coverPhoto],
-          status: item.product.status,
-          // description: item.product.description,
-          // metadata: {
-          //   id: item._id,
-          // },
-        },
-        unit_amount: item.product.price,
-      },
+      product: item.product._id,
       quantity: item.quantity,
     };
   });
   const customer = await stripe.customers.create({
     metadata: {
       userId: user._id,
-      cart: JSON.stringify(cart),
+      items: JSON.stringify(cart),
       cartId: cartId,
     },
   });
@@ -68,23 +53,52 @@ export const checkOut = async (req, res) => {
 
   res.send({ url: session.url });
 };
-// server.js
-//
-// Use this sample code to handle webhook events in your integration.
-//
-// 1) Paste this code into a new file (server.js)
-//
-// 2) Install dependencies
-//   npm install stripe
-//   npm install express
-//
-// 3) Run the server on http://localhost:4242
-//   node server.js
 
-// The library needs to be configured with your account's secret key.
-// Ensure the key is kept out of any version control system you might be using.
+const createOrder = async (customer, items, data) => {
+  console.log("createorder");
+  const userId = customer.metadata.userId;
+  const cartItems = JSON.parse(customer.metadata.items);
 
-// This is your Stripe CLI webhook secret for testing your endpoint locally.
+  const newOrder = new Order({
+    user: userId,
+    customerId: data.customer,
+    paymentIntentId: data.payment_intent,
+    subtotal: data.amount_subtotal,
+    total: data.amount_subtotal,
+    shipping: data.customer_details,
+    paymentStatus: data.payment_status,
+    deliveryStatus: data.delivery_Status,
+    status: data.status,
+    items: cartItems,
+  });
+
+  try {
+    const order = await newOrder.save();
+    if (order) {
+      console.log("logd order", order);
+      const cartItems = await Cart.find({ user: userId });
+      await Cart.deleteMany({ user: userId });
+      let response = {
+        success: "true",
+        statuscode: 200,
+        data: order,
+        message: "success",
+      };
+      res.json(response);
+    } else {
+      let response = {
+        statuscode: 400,
+        data: [],
+        error: [error],
+        message: "something failed",
+      };
+      return res.json(response);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 let endpointSecret;
 // endpointSecret = process.env.ENDPOINT_SECRET;
 export const webHook = async (request, response) => {
@@ -96,7 +110,7 @@ export const webHook = async (request, response) => {
     let event;
     try {
       event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-      console.log("webhool");
+      // console.log("webhool");
     } catch (err) {
       response.status(400).send(`Webhook Error: ${err.message}`);
       console.log(`Webhook Error: ${err.message}`);
@@ -115,9 +129,7 @@ export const webHook = async (request, response) => {
       const items = await stripe.checkout.sessions.listLineItems(data.id);
       const customer = await stripe.customers.retrieve(data.customer);
 
-      console.log("customer", customer);
-      // console.log("data", data);
-      console.log(items.data);
+      createOrder(customer, items, data);
     } catch (error) {
       console.log(error);
     }
@@ -145,3 +157,38 @@ export const webHook = async (request, response) => {
 //   default:
 //     console.log(`Unhandled event type ${event.type}`);
 // }
+// const userId = JSON.parse(customer.metadata.userId);
+// const cartItems = JSON.parse(customer.metadata.items);
+// let p = {
+//   user: userId,
+//   items: cartItems,
+//   customerId: data.customer,
+//   paymentIntentId: data.payment_intent,
+//   subtotal: data.amount_subtotal,
+//   total: data.amount_subtotal,
+//   shipping: data.customer_details,
+//   paymentStatus: data.payment_status,
+//   status: data.status,
+// };
+// console.log(p);
+
+// console.log("customer", customer);
+// console.log("data", data);
+// console.log(items.data);
+// let p = {
+// user: userId,
+// items: cartItems,
+//   customerId: data.customer,
+//   paymentIntentId: data.payment_intent,
+//   subtotal: data.amount_subtotal,
+//   total: data.amount_subtotal,
+//   shipping: data.customer_details,
+//   paymentStatus: data.payment_status,
+//   deliveryStatus: data.delivery_Status,
+// };
+// console.log(p);
+// Set the Access-Control-Allow-Origin header to allow requests from 'https://fortune-ecommerce.vercel.app'
+// res.set(
+//   "Access-Control-Allow-Origin",
+//   "https://fortune-ecommerce.vercel.app"
+// );
