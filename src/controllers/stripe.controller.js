@@ -2,7 +2,6 @@ import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-
 dotenv.config();
 import Order from "../models/orders.models.js";
 import Cart from "../models/cart.models.js";
-import { buffer } from "micro";
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
@@ -106,14 +105,14 @@ const createOrder = async (res, customer, items, data) => {
 const endpointSecret = process.env.ENDPOINT_SECRET;
 export const webHook = async (request, response) => {
   const sig = request.headers["stripe-signature"];
-  const buf = await buffer(request);
+  const payload = request.body;
 
   let data;
   let eventType;
   if (endpointSecret) {
     let event;
     try {
-      event = stripe.webhooks.constructEvent(buf, sig, endpointSecret);
+      event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
       // console.log("webhool");
     } catch (err) {
       response.status(400).send(`Webhook Error: ${err.message}`);
