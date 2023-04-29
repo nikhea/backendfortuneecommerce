@@ -3,6 +3,7 @@ import {
   getOwnerWishlist,
   createOwnerWishlist,
   removeOwnerWishlist,
+  getAllWishlist,
 } from "../controllers/wishlist.controllers.js";
 import { loginRequired } from "../middleware/authtication.js";
 import { ensureCustomer } from "../middleware/roleValidation.js";

@@ -35,14 +35,18 @@ const UserSchema = new Schema(
       enum: ["customer", "admin"],
       default: "customer",
     },
-    cart: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Cart",
-    },
-    wishlist: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Wishlist",
-    },
+    cart: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart",
+      },
+    ],
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Wishlist",
+      },
+    ],
   },
   { timestamps: true }
 );

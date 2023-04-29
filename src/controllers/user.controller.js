@@ -2,7 +2,7 @@ import Users from "../models/user.models.js";
 
 export const getUsers = async (req, res, next) => {
   try {
-    let users = await Users.find().select("-password -__v");
+    let users = await Users.find().select("-password -__v").populate("cart");
     let response = {
       success: "true",
       statuscode: 200,

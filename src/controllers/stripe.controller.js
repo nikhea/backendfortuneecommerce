@@ -9,12 +9,22 @@ const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const checkOut = async (req, res) => {
   // Set the Access-Control-Allow-Origin header to allow requests from 'https://fortune-ecommerce.vercel.app'
-  res.set(
-    "Access-Control-Allow-Origin",
-    "https://fortune-ecommerce.vercel.app"
-  );
+  // res.set(
+  //   "Access-Control-Allow-Origin",
+  //   "https://fortune-ecommerce.vercel.app"
+  // );
 
   const { cartItem, user } = req.body;
+  console.log(cartItem, user);
+  if (!cartItem || !user) {
+    let response = {
+      statuscode: 400,
+      data: [],
+      // error: [error],
+      message: "something failed",
+    };
+    return res.json(response);
+  }
   // const user = req.user;
   let cartId = cartItem[0]._id;
   const cart = cartItem.map((item) => {

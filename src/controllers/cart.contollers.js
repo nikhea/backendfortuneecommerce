@@ -1,11 +1,15 @@
 import Cart from "../models/cart.models.js";
 import Product from "../models/products.models.js";
+import User from "../models/user.models.js";
+
 export const createCart = async (req, res) => {
   const { items } = req.body;
-  const user = req.user._id;
+  const userId = req.user._id;
   try {
     const product = await Product.findById(items.product);
-
+    const user = await User.findById(userId)
+      .populate("wishlist")
+      .populate("cart");
     if (!product) {
       return res.status(404).send("Product not found");
     }
@@ -24,7 +28,8 @@ export const createCart = async (req, res) => {
       }
 
       await cart.save();
-
+      user.cart.push(cart);
+      await user.save();
       return res.status(200).json({
         success: true,
         statuscode: 200,
@@ -33,7 +38,8 @@ export const createCart = async (req, res) => {
       });
     } else {
       cart = await Cart.create({ user, items });
-
+      user.cart.push(cart);
+      await user.save();
       return res.status(201).json({
         success: true,
         statuscode: 201,
