@@ -110,7 +110,8 @@ export const getProductByName = async (req, res, next) => {
   try {
     const product = await Products.findOne({ name: p })
       .populate("category")
-      .populate("subcategory");
+      .populate("subcategory")
+      .populate("reviews");
     let response = {
       success: "true",
       statuscode: 200,

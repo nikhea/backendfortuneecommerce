@@ -1,12 +1,21 @@
 import express from "express";
+import {
+  createReview,
+  getAllReview,
+  getProductReview,
+  updateProductReview,
+  deleteProductReview,
+} from "../controllers/reviews.controller.js";
+import { loginRequired } from "../middleware/authtication.js";
+import { ensureCustomer, ensureAdmin } from "../middleware/roleValidation.js";
 const router = express.Router();
+router.get("/", getAllReview);
 
-router.get("/review", getAllReview);
+router.get("/:productId", getProductReview);
 
-// router.post("/subcategory", CreateSubCategory);
-// // router.put("/products", updateOneProduct);
+router.post("/:productId", loginRequired, ensureCustomer, createReview);
+router.put("/:reviewId", loginRequired, ensureCustomer, updateProductReview);
 
-// router.get("/subcategory/:name", getOneSubCategories);
-// router.delete("/subcategory/:id", removeOneSubCategories);
+router.delete("/:reviewId", loginRequired, ensureAdmin, deleteProductReview);
 
 export default router;

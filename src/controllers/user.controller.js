@@ -22,7 +22,7 @@ export const getUsers = async (req, res, next) => {
 };
 export const getMe = async (req, res, next) => {
   try {
-    let user = await Users.findById(req.user.id).select("-password -v");
+    let user = await Users.findById(req.user.id).select("-password -v").populate("cart");
     let response = {
       success: "true",
       statuscode: 200,

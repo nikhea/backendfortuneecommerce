@@ -79,9 +79,10 @@ export const getAllCart = async (req, res) => {
 
 export const increaseCartItemQuantity = async (req, res) => {
   const { itemId, type } = req.params;
+
   const { quantity } = req.body;
   const user = req.user._id;
-  console.log(quantity);
+  console.log(quantity, itemId);
   try {
     const cart = await Cart.findOne({ user });
 
@@ -111,7 +112,6 @@ export const increaseCartItemQuantity = async (req, res) => {
       message: "quantity updated successfully",
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };

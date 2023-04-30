@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { db } from "./db/index.js";
 import morgan from "morgan";
-// import errorHandler from "./middleware/errorHandler.js";
+import errorHandler from "./middleware/errorHandler.js";
 import Users from "./routes/user.routes.js";
 import Auth from "./routes/auth.routes.js";
 import Products from "./routes/product.routes.js";
@@ -17,8 +17,7 @@ import Compare from "./routes/compare.routes.js";
 import Order from "./routes/order.routes.js";
 import StripeRoute from "./routes/stripe.routes.js";
 import StripeHookRoute from "./routes/stripeHook.routes.js";
-
-// import Review from "./routes/review.routes.js";
+import Review from "./routes/review.routes.js";
 const app = express();
 app.get("/", (req, res) => {
   try {
@@ -43,7 +42,7 @@ app.use(express.urlencoded({ extended: false, limit: "50mb" }));
 app.use(cors());
 app.options("*", cors());
 app.use(morgan("tiny"));
-// app.use(errorHandler);
+app.use(errorHandler);
 app.use("/api/auth", Auth);
 app.use("/api/user", Users);
 app.use("/api/products", Products);
@@ -54,7 +53,7 @@ app.use("/api/orders", Order);
 app.use("/api/category", Category);
 app.use("/api/subcategory", SubCategory);
 app.use("/api/carts", Cart);
-// app.use("/api/", Review);
+app.use("/api/review", Review);
 app.use("/api/stripe", StripeRoute);
 app.use(
   "/api/stripe/webhook",
