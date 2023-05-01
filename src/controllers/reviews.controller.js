@@ -24,7 +24,8 @@ export const createReview = async (req, res) => {
       const response = {
         success: true,
         statuscode: 400,
-        message: "You have already given a review for this product.",
+        message: "Your review for this product exist.",
+        // You have already given a review for this product.
       };
       return res.status(400).json(response);
     }
@@ -65,9 +66,9 @@ export const createReview = async (req, res) => {
 };
 
 export const getAllReview = async (req, res) => {
-  //   const reviews = await Review.deleteMany();
+  // const reviews = await Review.deleteMany();
   try {
-    const reviews = await Review.find().populate("user");
+    const reviews = await Review.find().populate("user", "-password");
     if (reviews) {
       const response = {
         success: true,
@@ -98,7 +99,10 @@ export const getProductReview = async (req, res) => {
   const { productId } = req.params;
 
   try {
-    const reviews = await Review.find({ product: productId }).populate("user");
+    const reviews = await Review.find({ product: productId }).populate(
+      "user",
+      "-password"
+    );
     if (reviews) {
       const response = {
         success: true,
