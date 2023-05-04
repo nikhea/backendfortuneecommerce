@@ -63,9 +63,7 @@ export const createProduct = async (req, res, next) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Products.find()
-      .populate("category")
-      .populate("subcategory");
+    const products = res.paginatedResults;
     let response = {
       success: "true",
       statuscode: 200,
@@ -82,6 +80,16 @@ export const getAllProducts = async (req, res) => {
     };
     return res.json(response);
   }
+  //   const products = await Products.find()
+  //   .populate("category")
+  //   .populate("subcategory");
+  // let response = {
+  //   success: "true",
+  //   statuscode: 200,
+  //   data: products,
+  //   message: "success",
+  // };
+  // res.json(response);
 };
 
 export const getOneProduct = async (req, res, next) => {

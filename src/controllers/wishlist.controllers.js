@@ -32,22 +32,34 @@ export const getAllWishlist = async (req, res, next) => {
 };
 export const getOwnerWishlist = async (req, res, next) => {
   const user = req.user.id;
+  // const { page = 1, pageSize = 2 } = req.query;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 2;
   try {
+    const count = await Wishlist.countDocuments({ user: user });
+    const totalPages = Math.ceil(count / pageSize);
+    const skip = (page - 1) * pageSize;
+
     let wishlist = await Wishlist.find({ user: user })
       .populate("product")
-      .populate("user", "-password");
+      .populate("user", "-password")
+      .skip(skip)
+      .limit(pageSize);
 
     const transformedData = wishlist.map(({ _id, product }) => ({
       _id,
       product,
     }));
-    // const wishlist = res.paginatedResults;
 
     let response = {
       success: "true",
       statuscode: 200,
       data: transformedData,
       message: "success",
+      page: page,
+      count: count,
+      totalPages: totalPages,
+      pageSize: pageSize,
     };
     res.json(response);
   } catch (error) {
@@ -128,6 +140,34 @@ export const removeOwnerWishlist = async (req, res, next) => {
   }
 };
 
+// const user = req.user.id;
+// try {
+//   let wishlist = await Wishlist.find({ user: user })
+//     .populate("product")
+//     .populate("user", "-password");
+
+//   const transformedData = wishlist.map(({ _id, product }) => ({
+//     _id,
+//     product,
+//   }));
+//   // const wishlist = res.paginatedResults;
+
+//   let response = {
+//     success: "true",
+//     statuscode: 200,
+//     data: transformedData,
+//     message: "success",
+//   };
+//   res.json(response);
+// } catch (error) {
+//   let response = {
+//     statuscode: 400,
+//     data: [],
+//     error: [error],
+//     message: "something failed",
+//   };
+//   return res.json(response);
+// }
 // export const createOwnerWishlist = async (req, res, next) => {
 //   const user = req.user.id;
 //   const { productId } = req.body;

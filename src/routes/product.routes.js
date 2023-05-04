@@ -7,10 +7,11 @@ import {
   updateOneProduct,
   removeOneProduct,
 } from "../controllers/product.contollers.js";
-
+import { filitersModels } from "../middleware/modelPagination.js";
+import Product from "../models/products.models.js";
 const router = express.Router();
 
-router.get("/", getAllProducts);
+router.get("/", filitersModels(Product), getAllProducts);
 
 router.post("/", createProduct);
 router.put("/:id", updateOneProduct);
