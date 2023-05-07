@@ -8,7 +8,6 @@ export const filitersModels = (model) => {
     const endIndex = page * limit;
     let match = {};
     const results = {};
-
     results.totalCount = await model.countDocuments().exec();
     results.totalPages = Math.ceil(results.totalCount / limit);
     if (req.query.page) {
@@ -55,7 +54,7 @@ export const filitersModels = (model) => {
         {
           $match: {
             $or: [
-              { title: { $regex: search || "", $options: "i" } },
+              { name: { $regex: search || "", $options: "i" } },
               { description: { $regex: search || "", $options: "i" } },
             ],
           },
@@ -122,12 +121,22 @@ export const filitersModels = (model) => {
           },
         },
       ];
-
       const Modals = await model.aggregate(pipeline).exec();
-
       results.results = Modals;
-      results.resultCount = results.results.length;
-      res.paginatedResults = results;
+      if (
+        results.results.length === 0 ||
+        results.results[0].data.length === 0
+      ) {
+        return res.status(404).json({
+          success: false,
+          statuscode: 404,
+          data: null,
+          message: "No items found",
+        });
+      } else {
+        results.resultCount = results.results.length;
+        res.paginatedResults = results;
+      }
       next();
     } catch (error) {
       let response = {
