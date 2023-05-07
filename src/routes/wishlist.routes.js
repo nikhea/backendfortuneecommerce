@@ -7,7 +7,7 @@ import {
 } from "../controllers/wishlist.controllers.js";
 import { loginRequired } from "../middleware/authtication.js";
 import { ensureCustomer } from "../middleware/roleValidation.js";
-import { filitersModels } from "../middleware/infinitPagination.js";
+// import { filitersModels } from "../middleware/infinitPagination.js";
 import Wishlist from "../models/wishlist.model.js";
 
 const router = express.Router();

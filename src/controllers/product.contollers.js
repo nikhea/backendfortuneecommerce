@@ -92,6 +92,29 @@ export const getAllProducts = async (req, res) => {
   // res.json(response);
 };
 
+export const getProductsByTage = async (req, res) => {
+  try {
+    const products = await Products.find()
+      .populate("category")
+      .populate("subcategory");
+    let response = {
+      success: "true",
+      statuscode: 200,
+      data: products,
+      message: "success",
+    };
+    res.json(response);
+  } catch (error) {
+    let response = {
+      statuscode: 500,
+      data: [],
+      error: [error],
+      message: "something failed",
+    };
+    return res.json(response);
+  }
+};
+
 export const getOneProduct = async (req, res, next) => {
   const id = req.params.id;
   try {

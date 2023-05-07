@@ -1,5 +1,5 @@
 // http://localhost:4000/api/properties?page=1&limit=12&search=kkdjkadd&sort=-1
-export const filitersModels = (model) => {
+export const m = (model) => {
   return async (req, res, next) => {
     const page = parseInt(req.query.page) || 2;
     const limit = 2;

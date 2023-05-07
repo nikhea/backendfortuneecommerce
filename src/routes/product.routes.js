@@ -3,6 +3,7 @@ import {
   createProduct,
   getAllProducts,
   getOneProduct,
+  getProductsByTage,
   getProductByName,
   updateOneProduct,
   removeOneProduct,
@@ -12,7 +13,7 @@ import Product from "../models/products.models.js";
 const router = express.Router();
 
 router.get("/", filitersModels(Product), getAllProducts);
-
+router.get("/tag", getProductsByTage);
 router.post("/", createProduct);
 router.put("/:id", updateOneProduct);
 
