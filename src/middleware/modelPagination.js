@@ -36,7 +36,7 @@ export const filitersModels = (model) => {
       let rating = parseInt(req.query.rating);
       match.$or = [
         {
-          rating: { $eq: rating },
+          rating: { $gte: rating },
         },
       ];
     }
