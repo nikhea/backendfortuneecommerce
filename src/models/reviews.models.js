@@ -19,6 +19,10 @@ const reviewSchema = new Schema(
       min: 1,
       max: 5,
     },
+    published: {
+      type: Boolean,
+      default: true,
+    },
     comment: {
       type: String,
       required: true,

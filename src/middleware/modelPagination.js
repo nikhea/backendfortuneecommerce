@@ -101,6 +101,7 @@ export const filitersModels = (model) => {
             description: "$description",
             price: "$price",
             rating: "$rating",
+            photos: "$photos",
             coverPhoto: "$coverPhoto",
             priceSymbol: "$priceSymbol",
           },

@@ -60,7 +60,39 @@ export const createProduct = async (req, res, next) => {
     return res.json(response);
   }
 };
-
+export const getAllProduct = async (req, res) => {
+  try {
+    const products = await Products.find()
+      .populate("category")
+      .populate("subcategory");
+    const extractedData = products.map((item) => ({
+      _id: item._id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      status: item.status,
+      coverPhoto: item.coverPhoto,
+      categoryName: item.category.name,
+      subcategoryName: item.subcategory.name,
+      rating: item.rating,
+    }));
+    let response = {
+      success: "true",
+      statuscode: 200,
+      data: extractedData,
+      message: "success",
+    };
+    return res.json(response);
+  } catch (error) {
+    let response = {
+      statuscode: 500,
+      data: [],
+      error: [error],
+      message: "something failed !!!!!!!",
+    };
+    return res.json(response);
+  }
+};
 export const getAllProducts = async (req, res) => {
   try {
     const products = res.paginatedResults;

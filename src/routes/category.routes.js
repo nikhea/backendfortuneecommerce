@@ -4,6 +4,7 @@ import {
   getAllCategories,
   removeOneCategories,
   getOneCategories,
+  updateOneCategory,
 } from "../controllers/category.controller.js";
 import { loginRequired } from "../middleware/authtication.js";
 import { ensureAdmin } from "../middleware/roleValidation.js";
@@ -19,6 +20,7 @@ router.post("/", loginRequired, ensureAdmin, CreateCategory);
 // router.put("/products", updateOneProduct);
 
 router.get("/:name", getOneCategories);
+router.patch("/:name", loginRequired, ensureAdmin, updateOneCategory);
 router.delete("/:id", loginRequired, removeOneCategories);
 
 export default router;

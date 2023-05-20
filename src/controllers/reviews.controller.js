@@ -68,7 +68,9 @@ export const createReview = async (req, res) => {
 export const getAllReview = async (req, res) => {
   // const reviews = await Review.deleteMany();
   try {
-    const reviews = await Review.find().populate("user", "-password");
+    const reviews = await Review.find()
+      .populate("user", "-password")
+      .populate("product");
     if (reviews) {
       const response = {
         success: true,

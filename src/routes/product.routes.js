@@ -3,6 +3,7 @@ import {
   createProduct,
   getAllProducts,
   getOneProduct,
+  getAllProduct,
   getProductsByTage,
   getProductByName,
   updateOneProduct,
@@ -12,6 +13,7 @@ import { filitersModels } from "../middleware/modelPagination.js";
 import Product from "../models/products.models.js";
 const router = express.Router();
 
+router.get("/all", getAllProduct);
 router.get("/", filitersModels(Product), getAllProducts);
 router.get("/tag", getProductsByTage);
 router.post("/", createProduct);
