@@ -1,7 +1,7 @@
 import Subcategory from "../models/Subcategory.models.js";
 import Category from "../models/Category.models.js";
 export const CreateSubCategory = async (req, res) => {
-  const { name, category, description } = req.body;
+  const { name, category, description, photo } = req.body.subCategoriesData;
   try {
     const categories = await Category.findOne({ name: category });
     if (!categories) {
@@ -18,6 +18,8 @@ export const CreateSubCategory = async (req, res) => {
         name,
         category: categories._id,
         description,
+        coverPhoto: photo.secure_url,
+        photo,
       });
 
       const subcategory = await subCategory.save();
@@ -29,7 +31,7 @@ export const CreateSubCategory = async (req, res) => {
         data: subcategory,
         message: "success",
       };
-      res.json(response);
+      return res.json(response);
     }
   } catch (error) {
     let response = {

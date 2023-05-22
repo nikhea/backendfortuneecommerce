@@ -1,7 +1,7 @@
 import Category from "../models/Category.models.js";
 
 export const CreateCategory = async (req, res) => {
-  const { name, description, coverPhoto } = req.body.categoriesData;
+  const { name, description, photo } = req.body.categoriesData;
   // console.log(name, description, coverPhoto);
   try {
     const existcategories = Category.find({ name });
@@ -15,7 +15,8 @@ export const CreateCategory = async (req, res) => {
     const category = new Category({
       name,
       description,
-      coverPhoto,
+      coverPhoto: photo.secure_url,
+      photo,
     });
     console.log(category);
     await category.save();
@@ -59,7 +60,6 @@ export const getAllCategories = async (req, res) => {
       message: "something failed",
     };
     return res.json(response);
-    res.status(500).json({ message: "Server error" });
   }
 };
 export const getOneCategories = async (req, res) => {
@@ -87,7 +87,7 @@ export const getOneCategories = async (req, res) => {
   }
 };
 export const updateOneCategory = async (req, res, next) => {
-  const { coverPhoto, description } = req.body.categoriesData;
+  const { description, photo } = req.body.categoriesData;
   const name = req.params.name;
   try {
     const category = await Category.findOne({ name });
@@ -107,9 +107,10 @@ export const updateOneCategory = async (req, res, next) => {
         $set: {
           name: req.body.categoriesData.name,
           description,
-          coverPhoto,
+          coverPhoto: photo.secure_url,
+          photo,
           subcategories: category.subcategories,
-          products: category.pr,
+          products: category.products,
         },
       },
       {

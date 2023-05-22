@@ -20,6 +20,28 @@ const subcategorySchema = new Schema(
       type: String,
       required: false,
     },
+    photo: {
+      asset_id: {
+        type: String,
+        required: false,
+      },
+      public_id: {
+        type: String,
+        required: false,
+      },
+      url: {
+        type: String,
+        required: false,
+      },
+      secure_url: {
+        type: String,
+        required: false,
+      },
+      thumbnail_url: {
+        type: String,
+        required: false,
+      },
+    },
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
