@@ -2,6 +2,7 @@ import express from "express";
 import {
   CreateSubCategory,
   getAllSubCategories,
+  getAllSubCategoriesPagination,
   removeOneSubCategories,
   getOneSubCategories,
 } from "../controllers/subCategory.controller.js";
@@ -9,6 +10,7 @@ import {
 const router = express.Router();
 
 router.get("/", getAllSubCategories);
+router.get("/pagination", getAllSubCategoriesPagination);
 
 router.post("/", CreateSubCategory);
 // router.put("/products", updateOneProduct);

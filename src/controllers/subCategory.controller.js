@@ -66,6 +66,40 @@ export const getAllSubCategories = async (req, res) => {
     return res.json(response);
   }
 };
+export const getAllSubCategoriesPagination = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 2;
+  try {
+    const count = await Subcategory.countDocuments();
+    const totalPages = Math.ceil(count / pageSize);
+    const skip = (page - 1) * pageSize;
+
+    const subcategories = await Subcategory.find()
+      .populate("category")
+      .populate("products")
+      .skip(skip)
+      .limit(pageSize);
+    let response = {
+      success: "true",
+      statuscode: 200,
+      data: subcategories,
+      message: "success",
+      page: page,
+      count: count,
+      totalPages: totalPages,
+      pageSize: pageSize,
+    };
+    res.json(response);
+  } catch (error) {
+    let response = {
+      statuscode: 500,
+      data: [],
+      error: [error],
+      message: "something failed",
+    };
+    return res.json(response);
+  }
+};
 
 export const getOneSubCategories = async (req, res) => {
   const subCategoryName = new RegExp("^" + req.params.name + "$", "i");
