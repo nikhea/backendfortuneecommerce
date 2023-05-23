@@ -127,6 +127,54 @@ export const getOneSubCategories = async (req, res) => {
     return res.json(response);
   }
 };
+export const updateOneSubCategory = async (req, res, next) => {
+  const { description, photo, category } = req.body.subCategoriesData;
+  const name = req.params.name;
+  try {
+    const subCategory = await Subcategory.findOne({ name });
+
+    if (!subCategory) {
+      let response = {
+        statuscode: 404,
+        data: [],
+        error: [error],
+        message: "category does not exist",
+      };
+      return res.json(response);
+    }
+    const updatedSubCategory = await Subcategory.findByIdAndUpdate(
+      subCategory._id,
+      {
+        $set: {
+          name: req.body.subCategoriesData.name,
+          description,
+          coverPhoto: photo.secure_url,
+          photo,
+          category: subCategory.category,
+          products: subCategory.products,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    let response = {
+      success: "true",
+      statuscode: 200,
+      data: updatedSubCategory,
+      message: "success",
+    };
+    res.json(response);
+  } catch (error) {
+    let response = {
+      statuscode: 400,
+      data: [],
+      error: [error],
+      message: "something failed",
+    };
+    return res.json(response);
+  }
+};
 export const removeOneSubCategories = async (req, res, next) => {
   const id = req.params.id;
   try {
