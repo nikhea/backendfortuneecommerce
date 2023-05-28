@@ -24,6 +24,8 @@
     "quantity": 5,
     " deliveryDate": "Fri Apr 07 2023 12:47:02 GMT+0100 (West Africa Standard Time)"
   },
+  "status": "out of stock",
+  "rating": "5",
   "category": "fashion",
   "subcategory": "female bags",
   "review": "",

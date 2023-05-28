@@ -27,6 +27,12 @@ const productSchema = new Schema(
       trim: true,
       maxlength: 64,
     },
+    shortDescription: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 800,
+    },
     description: {
       type: String,
       required: true,
@@ -61,6 +67,28 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
+    displayPhoto: {
+      asset_id: {
+        type: String,
+        required: false,
+      },
+      public_id: {
+        type: String,
+        required: false,
+      },
+      url: {
+        type: String,
+        required: false,
+      },
+      secure_url: {
+        type: String,
+        required: false,
+      },
+      thumbnail_url: {
+        type: String,
+        required: false,
+      },
+    },
     specifications: [
       {
         name: String,
@@ -85,8 +113,8 @@ const productSchema = new Schema(
     },
     rating: {
       type: Number,
-      // required: true,
-      default: 0,
+      required: true,
+      default: 5,
     },
     reviews: [
       {

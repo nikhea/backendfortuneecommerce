@@ -6,6 +6,7 @@ export const createProduct = async (req, res, next) => {
     const {
       name,
       description,
+      shortDescription,
       price,
       quantity,
       sold,
@@ -19,17 +20,19 @@ export const createProduct = async (req, res, next) => {
       features,
       rating,
     } = req.body;
-
+    // console.log(coverPhoto);
     const exsitCategory = await Category.findOne({ name: category });
     const exsitSubCategory = await Subcategory.findOne({ name: subcategory });
     const Product = new Products({
       name,
       description,
+      shortDescription,
       price,
       quantity,
       sold,
       photos,
-      coverPhoto,
+      displayPhoto: coverPhoto,
+      coverPhoto: coverPhoto.secure_url,
       specifications,
       availability,
       category: exsitCategory._id,
