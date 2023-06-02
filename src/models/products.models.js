@@ -135,6 +135,27 @@ const productSchema = new Schema(
         discount: Number,
       },
     ],
+    bestSeller: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    newArrival: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    specialOffer: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+
     features: [String],
   },
   { timestamps: true }

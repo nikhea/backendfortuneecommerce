@@ -18,7 +18,12 @@ export const createProduct = async (req, res, next) => {
       subcategory,
       review,
       features,
+      status,
       rating,
+      bestSeller,
+      featured,
+      newArrival,
+      specialOffer,
     } = req.body;
     // console.log(coverPhoto);
     const exsitCategory = await Category.findOne({ name: category });
@@ -27,6 +32,7 @@ export const createProduct = async (req, res, next) => {
       name,
       description,
       shortDescription,
+      status,
       price,
       quantity,
       sold,
@@ -40,6 +46,10 @@ export const createProduct = async (req, res, next) => {
       review,
       features,
       rating,
+      bestSeller,
+      featured,
+      newArrival,
+      specialOffer,
     });
     const product = await Product.save();
     exsitSubCategory.products.push(product);
@@ -82,7 +92,7 @@ export const getAllProduct = async (req, res) => {
     let response = {
       success: "true",
       statuscode: 200,
-      data: extractedData,
+      data: products,
       message: "success",
     };
     return res.json(response);
