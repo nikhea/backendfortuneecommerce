@@ -17,7 +17,7 @@ router.get("/all", getAllProduct);
 router.get("/", filitersModels(Product), getAllProducts);
 router.get("/tag", getProductsByTage);
 router.post("/", createProduct);
-router.put("/:id", updateOneProduct);
+router.patch("/:id", updateOneProduct);
 
 // router.get("/:id", getOneProduct);
 router.get("/:name", getProductByName);

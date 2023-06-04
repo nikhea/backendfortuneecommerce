@@ -92,7 +92,7 @@ export const getAllProduct = async (req, res) => {
     let response = {
       success: "true",
       statuscode: 200,
-      data: products,
+      data: extractedData,
       message: "success",
     };
     return res.json(response);
@@ -208,8 +208,34 @@ export const getProductByName = async (req, res, next) => {
 
 export const updateOneProduct = async (req, res, next) => {
   const id = req.params.id;
+  const {
+    name,
+    description,
+    shortDescription,
+    price,
+    quantity,
+    sold,
+    photos,
+    coverPhoto,
+    specifications,
+    availability,
+    displayPhoto,
+    category,
+    subcategory,
+    reviews,
+    features,
+    status,
+    rating,
+    bestSeller,
+    featured,
+    newArrival,
+    specialOffer,
+  } = req.body.productData;
   try {
-    const product = await Products.findByIdAndUpdate(id);
+    const product = await Products.findById(id);
+    const categories = await Category.findOne({ name: category });
+    const SubCategory = await Subcategory.findOne({ name: subcategory });
+    console.log(product.reviews);
     if (!product) {
       let response = {
         statuscode: 400,
@@ -219,16 +245,44 @@ export const updateOneProduct = async (req, res, next) => {
       };
       return res.json(response);
     }
-    const updatedProduct = await Products.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const updatedProduct = await Products.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          name,
+          description,
+          shortDescription,
+          price,
+          quantity,
+          sold,
+          displayPhoto,
+          photos,
+          coverPhoto: coverPhoto.secure_url,
+          specifications,
+          availability,
+          category: categories._id,
+          subcategory: SubCategory._id,
+          reviews: product.reviews,
+          features,
+          status,
+          rating,
+          bestSeller,
+          featured,
+          newArrival,
+          specialOffer,
+        },
+      },
+      {
+        new: true,
+      }
+    );
     let response = {
       success: "true",
       statuscode: 200,
       data: updatedProduct,
       message: "success",
     };
-    res.json(response);
+    return res.json(response);
   } catch (error) {
     let response = {
       statuscode: 500,
