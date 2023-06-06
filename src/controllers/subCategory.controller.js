@@ -70,7 +70,6 @@ export const getAllSubCategoriesPagination = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 2;
   const searchName = req.query;
-  console.log(searchName);
   try {
     let query = Subcategory.find();
     let countQuery = Subcategory.find();

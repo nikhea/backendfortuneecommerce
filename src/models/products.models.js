@@ -21,6 +21,10 @@ const availabilitySchema = new Schema(
 
 const productSchema = new Schema(
   {
+    slug: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,

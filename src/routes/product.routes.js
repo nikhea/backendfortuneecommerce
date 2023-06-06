@@ -5,7 +5,7 @@ import {
   getOneProduct,
   getAllProduct,
   getProductsByTage,
-  getProductByName,
+  getProductBySlug,
   updateOneProduct,
   removeOneProduct,
 } from "../controllers/product.contollers.js";
@@ -20,7 +20,7 @@ router.post("/", createProduct);
 router.patch("/:id", updateOneProduct);
 
 // router.get("/:id", getOneProduct);
-router.get("/:name", getProductByName);
+router.get("/:slug", getProductBySlug);
 router.delete("/:id", removeOneProduct);
 
 export default router;

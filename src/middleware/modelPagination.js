@@ -98,6 +98,7 @@ export const filitersModels = (model) => {
             category: { $arrayElemAt: ["$category.name", 0] },
             subcategory: { $arrayElemAt: ["$subcategory.name", 0] },
             name: "$name",
+            slug: "$slug",
             description: "$description",
             price: "$price",
             rating: "$rating",

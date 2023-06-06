@@ -1,6 +1,7 @@
 import Products from "../models/products.models.js";
 import Category from "../models/Category.models.js";
 import Subcategory from "../models/Subcategory.models.js";
+import { slugifyURL } from "../middleware/slugifyurl.js";
 export const createProduct = async (req, res, next) => {
   try {
     const {
@@ -25,13 +26,14 @@ export const createProduct = async (req, res, next) => {
       newArrival,
       specialOffer,
     } = req.body;
-    // console.log(coverPhoto);
+    const slugURl = `${name} ${category} ${subcategory}`;
     const exsitCategory = await Category.findOne({ name: category });
     const exsitSubCategory = await Subcategory.findOne({ name: subcategory });
     const Product = new Products({
       name,
       description,
       shortDescription,
+      slug: slugifyURL(slugURl),
       status,
       price,
       quantity,
@@ -80,6 +82,7 @@ export const getAllProduct = async (req, res) => {
       .populate("subcategory");
     const extractedData = products.map((item) => ({
       _id: item._id,
+      slug: item.slug,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
@@ -180,11 +183,11 @@ export const getOneProduct = async (req, res, next) => {
   }
 };
 
-export const getProductByName = async (req, res, next) => {
-  const p = new RegExp("^" + req.params.name + "$", "i");
-
+export const getProductBySlug = async (req, res, next) => {
+  // const p = new RegExp("^" + req.params.name + "$", "i");
+  const slug = req.params.slug;
   try {
-    const product = await Products.findOne({ name: p })
+    const product = await Products.findOne({ slug })
       .populate("category")
       .populate("subcategory")
       .populate("reviews");
@@ -231,6 +234,7 @@ export const updateOneProduct = async (req, res, next) => {
     newArrival,
     specialOffer,
   } = req.body.productData;
+  const slugURl = `${name} ${category} ${subcategory}`;
   try {
     const product = await Products.findById(id);
     const categories = await Category.findOne({ name: category });
@@ -250,6 +254,7 @@ export const updateOneProduct = async (req, res, next) => {
       {
         $set: {
           name,
+          slug: slugifyURL(slugURl),
           description,
           shortDescription,
           price,
