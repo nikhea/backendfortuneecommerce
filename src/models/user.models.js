@@ -1,7 +1,9 @@
 import * as mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import validator from "validator";
+import ProfileScheme from "./profile.model.js";
 import { roles } from "../utils/constants.js";
+
 const Schema = mongoose.Schema;
 const UserSchema = new Schema(
   {
@@ -47,6 +49,7 @@ const UserSchema = new Schema(
         ref: "Wishlist",
       },
     ],
+    profile: ProfileScheme,
   },
   { timestamps: true }
 );
