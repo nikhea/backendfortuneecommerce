@@ -3,7 +3,7 @@ export const filitersModels = (model) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || Number.MAX_SAFE_INTEGER;
     const search = req.query.search;
-    let sortby = parseInt(req.query.sort) || 1;
+    let sortby = parseInt(req.query.sort) || -1;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     let match = {};
@@ -45,6 +45,15 @@ export const filitersModels = (model) => {
       match.$or = [
         {
           quantity: { $eq: quantity },
+        },
+      ];
+    }
+    if (req.query.minPrice && req.query.maxPrice) {
+      let minPrice = parseInt(req.query.minPrice);
+      let maxPrice = parseInt(req.query.maxPrice);
+      match.$or = [
+        {
+          price: { $gte: minPrice, $lte: maxPrice },
         },
       ];
     }
@@ -100,6 +109,7 @@ export const filitersModels = (model) => {
             name: "$name",
             slug: "$slug",
             description: "$description",
+            shortDescription: "$shortDescription",
             price: "$price",
             rating: "$rating",
             photos: "$photos",
