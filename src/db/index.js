@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import * as mongoose from "mongoose";
 
-let dev_db_url = process.env.MONGODB_URI_LOCAL;
+let dev_db_ur = process.env.MONGODB_URI_LOCAL;
 
 const mongoDB = process.env.MONGODB_URI;
 const connectionParams = {
