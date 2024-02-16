@@ -15,7 +15,6 @@ export const checkOut = async (req, res) => {
   // );
 
   const { cartItem, user } = req.body;
-  console.log(cartItem, user);
   if (!cartItem || !user) {
     let response = {
       statuscode: 400,
