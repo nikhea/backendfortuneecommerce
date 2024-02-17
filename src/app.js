@@ -37,8 +37,10 @@ app.get("/", (req, res) => {
 
 // Init Middleware
 app.use(
-  "/api/stripe/webhook",
-  bodyParser.raw({ type: "*/*" }),
+  "/api/stripe",
+  express.raw({ type: "application/json" }),
+
+  // bodyParser.raw({ type: "*/*" }),
   StripeHookRoute
 );
 
@@ -59,7 +61,7 @@ app.use("/api/category", Category);
 app.use("/api/subcategory", SubCategory);
 app.use("/api/carts", Cart);
 app.use("/api/review", Review);
-app.use("/api/stripe", StripeRoute);
+app.use("/api/payment", StripeRoute);
 
 // api/stripe/webhook
 

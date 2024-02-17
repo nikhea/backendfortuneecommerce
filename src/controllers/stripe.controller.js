@@ -2,29 +2,21 @@ import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-
 dotenv.config();
 import Order from "../models/orders.models.js";
 import Cart from "../models/cart.models.js";
-import getRawBody from "raw-body";
+// import getRawBody from "raw-body";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const checkOut = async (req, res) => {
-  // Set the Access-Control-Allow-Origin header to allow requests from 'https://fortune-ecommerce.vercel.app'
-  // res.set(
-  //   "Access-Control-Allow-Origin",
-  //   "https://fortune-ecommerce.vercel.app"
-  // );
-
   const { cartItem, user } = req.body;
   if (!cartItem || !user) {
     let response = {
       statuscode: 400,
-      data: [],
-      // error: [error],
+      error: [],
       message: "something failed",
     };
     return res.json(response);
   }
-  // const user = req.user;
   let cartId = cartItem[0]._id;
   const cart = cartItem.map((item) => {
     return {
@@ -46,7 +38,7 @@ export const checkOut = async (req, res) => {
         product_data: {
           name: item.product.name,
           images: [item.product.coverPhoto],
-          description: item.product.description,
+          // description: item.product.description,
           metadata: {
             id: item._id,
           },
@@ -56,6 +48,7 @@ export const checkOut = async (req, res) => {
       quantity: item.quantity,
     };
   });
+
   const session = await stripe.checkout.sessions.create({
     phone_number_collection: {
       enabled: true,
@@ -97,7 +90,7 @@ const createOrder = async (res, customer, items, data) => {
         data: order,
         message: "success",
       };
-      res.json(response);
+      // res.json(response);
     } else {
       let response = {
         statuscode: 400,
@@ -105,7 +98,7 @@ const createOrder = async (res, customer, items, data) => {
         error: [error],
         message: "something failed",
       };
-      return res.json(response);
+      // return res.json(response);
     }
   } catch (error) {
     console.log(error);
@@ -115,16 +108,16 @@ const createOrder = async (res, customer, items, data) => {
 // let endpointSecret;
 const endpointSecret = process.env.ENDPOINT_SECRET;
 export const webHook = async (request, response) => {
+  console.log("helloooo");
   const sig = request.headers["stripe-signature"];
-  const payload = await getRawBody(request.body);
-
+  // const payload = await getRawBody(request.body);
+  const payload = request.body;
   let data;
   let eventType;
   if (endpointSecret) {
     let event;
     try {
       event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
-      // console.log("webhool");
     } catch (err) {
       response.status(400).send(`Webhook Error: ${err.message}`);
       console.log(`Webhook Error: ${err.message}`);
@@ -142,7 +135,6 @@ export const webHook = async (request, response) => {
     try {
       const items = await stripe.checkout.sessions.listLineItems(data.id);
       const customer = await stripe.customers.retrieve(data.customer);
-
       createOrder(response, customer, items, data);
     } catch (error) {
       console.log(error);
@@ -150,6 +142,7 @@ export const webHook = async (request, response) => {
   }
   response.send().end();
 };
+
 // stripe.customers
 //   .retrieve(data.customer)
 //   .then((customer) => {

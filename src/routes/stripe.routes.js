@@ -1,6 +1,6 @@
 import express from "express";
 
-import { checkOut, webHook } from "../controllers/stripe.controller.js";
+import { checkOut } from "../controllers/stripe.controller.js";
 import { loginRequired } from "../middleware/authtication.js";
 import { ensureCustomer } from "../middleware/roleValidation.js";
 
