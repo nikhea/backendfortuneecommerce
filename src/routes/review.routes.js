@@ -17,12 +17,12 @@ router.get("/:productId", getProductReview);
 router.post("/:productId", loginRequired, ensureCustomer, createReview);
 router.put("/:reviewId", loginRequired, ensureCustomer, updateProductReview);
 
-router.delete("/:reviewId", loginRequired, ensureAdmin, deleteProductReview);
 router.patch(
   "/:reviewId/status",
   loginRequired,
   ensureAdmin,
   updateProductReviewStatus
 );
+router.delete("/:reviewId", loginRequired, ensureAdmin, deleteProductReview);
 
 export default router;

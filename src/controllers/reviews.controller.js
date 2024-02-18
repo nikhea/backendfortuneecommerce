@@ -168,10 +168,17 @@ export const updateProductReview = async (req, res) => {
 };
 
 export const updateProductReviewStatus = async (req, res) => {
-  const { reviewId } = req.params;
-
+  const { user, reviewId } = req.params;
   try {
     const existreview = await Review.findById(reviewId);
+    if (!existreview) {
+      const response = {
+        success: true,
+        statuscode: 400,
+        message: "Review not found.",
+      };
+      res.status(400).json(response);
+    }
     const review = await Review.findByIdAndUpdate(
       reviewId,
       { published: !existreview.published },
@@ -208,10 +215,15 @@ export const deleteProductReview = async (req, res) => {
   const { reviewId } = req.params;
 
   try {
-    const review = await Review.findByIdAndDelete(reviewId);
-    if (!review) {
-      return res.status(404).json({ message: "Review not found." });
+    const reviews = await Review.findById(reviewId);
+    if (!reviews) {
+      return res.status(404).json({
+        success: true,
+        statuscode: 404,
+        message: "Review not found.",
+      });
     }
+    const review = await Review.findByIdAndDelete(reviewId);
 
     // Remove the review ID from the associated product's reviews array
     const product = await Product.findById(review.product);
@@ -221,7 +233,12 @@ export const deleteProductReview = async (req, res) => {
       await product.save();
     }
 
-    res.json({ message: "Review deleted successfully." });
+    const response = {
+      success: true,
+      statuscode: 200,
+      message: "review removed.",
+    };
+    res.status(200).json(response);
   } catch (error) {
     const response = {
       success: true,
