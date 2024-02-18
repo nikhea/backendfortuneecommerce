@@ -20,7 +20,7 @@ export const loginRequired = async (req, res, next) => {
           statuscode: 401,
           message: "Not authorized",
         };
-        return res.status(response.statuscode).json(response);
+        return res.status(401).json(response);
       }
     } catch (error) {
       let response = {
@@ -28,7 +28,7 @@ export const loginRequired = async (req, res, next) => {
         error: [error],
         message: "Not authorized",
       };
-      return res.status(response.statuscode).json(response);
+      return res.status(401).json(response);
     }
   }
   if (!token) {
@@ -36,6 +36,6 @@ export const loginRequired = async (req, res, next) => {
       statuscode: 401,
       message: "Not authorized no token",
     };
-    return res.status(response.statuscode).json(response);
+    return res.status(401).json(response);
   }
 };

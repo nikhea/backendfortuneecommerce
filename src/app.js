@@ -14,7 +14,7 @@ import Category from "./routes/category.routes.js";
 import Cart from "./routes/cart.routes.js";
 import Wishlist from "./routes/wishlist.routes.js";
 import Compare from "./routes/compare.routes.js";
-import Order from "./routes/order.routes.js";
+import Order from "./routes/orders.routes.js";
 import StripeRoute from "./routes/stripe.routes.js";
 import StripeHookRoute from "./routes/stripeHook.routes.js";
 import Review from "./routes/review.routes.js";

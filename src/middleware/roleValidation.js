@@ -5,6 +5,13 @@ import Cart from "../models/cart.models.js";
 // import Users from "../models/user.models.js";
 
 export const ensureAdmin = async (req, res, next) => {
+  if (!req.user) {
+    let response = {
+      statuscode: 400,
+      message: "become authorized to continue",
+    };
+    return res.status(400).json(response);
+  }
   if (req.user.role === roles.admin) {
     next();
   } else {
@@ -13,10 +20,17 @@ export const ensureAdmin = async (req, res, next) => {
       message:
         "you are not authorized to perform this action, Only an Admin can perform this action",
     };
-    return res.status(response.statuscode).json(response);
+    return res.status(400).json(response);
   }
 };
 export const ensureCustomer = async (req, res, next) => {
+  if (!req.user) {
+    let response = {
+      statuscode: 400,
+      message: "become authorized to continue",
+    };
+    return res.status(400).json(response);
+  }
   if (req.user.role === roles.customer) {
     next();
   } else {
@@ -25,10 +39,17 @@ export const ensureCustomer = async (req, res, next) => {
       message:
         "you are not authorized to perform this action, Only a Customer can perform this action",
     };
-    return res.status(response.statuscode).json(response);
+    return res.status(400).json(response);
   }
 };
 export const ensureIsOwner = async (req, res, next) => {
+  if (!req.user) {
+    let response = {
+      statuscode: 400,
+      message: "become authorized to continue",
+    };
+    return res.status(400).json(response);
+  }
   let isOwner = await Cart.findById(req.user.id).select("-password -v");
 
   if (req.user._id === isOwner._id) {
@@ -39,6 +60,6 @@ export const ensureIsOwner = async (req, res, next) => {
       message:
         "you are not authorized to perform this action, Only a Customer can perform this action",
     };
-    return res.status(response.statuscode).json(response);
+    return res.status(400).json(response);
   }
 };
