@@ -29,6 +29,11 @@ const reviewSchema = new Schema(
       trim: true,
       maxlength: 1000,
     },
+    createdDate: {
+      type: Date,
+      default: Date.now,
+      required: true,
+    },
   },
   {
     timestamps: true,

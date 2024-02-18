@@ -101,10 +101,10 @@ export const getProductReview = async (req, res) => {
   const { productId } = req.params;
 
   try {
-    const reviews = await Review.find({ product: productId }).populate(
-      "user",
-      "-password"
-    );
+    const reviews = await Review.find({
+      product: productId,
+      published: true,
+    }).populate("user", "-password");
     if (reviews) {
       const response = {
         success: true,
@@ -164,6 +164,44 @@ export const updateProductReview = async (req, res) => {
       message: "An error occurred while updating the review.",
     };
     return res.status(500).json(response);
+  }
+};
+
+export const updateProductReviewStatus = async (req, res) => {
+  const { reviewId } = req.params;
+
+  try {
+    const existreview = await Review.findById(reviewId);
+    const review = await Review.findByIdAndUpdate(
+      reviewId,
+      { published: !existreview.published },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    if (!review) {
+      const response = {
+        success: true,
+        statuscode: 400,
+        message: "Review not found.",
+      };
+      res.status(400).json(response);
+    }
+    const response = {
+      success: true,
+      statuscode: 201,
+      data: review,
+      message: "status updated.",
+    };
+    return res.status(201).json(response);
+  } catch (error) {
+    const response = {
+      success: true,
+      statuscode: 500,
+      message: "An error occurred while updating the review.",
+    };
+    res.status(500).json(response);
   }
 };
 export const deleteProductReview = async (req, res) => {
