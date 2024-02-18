@@ -4,6 +4,7 @@ import {
   getAllReview,
   getProductReview,
   updateProductReview,
+  updateProductReviewStatus,
   deleteProductReview,
 } from "../controllers/reviews.controller.js";
 import { loginRequired } from "../middleware/authtication.js";
@@ -16,6 +17,12 @@ router.get("/:productId", getProductReview);
 router.post("/:productId", loginRequired, ensureCustomer, createReview);
 router.put("/:reviewId", loginRequired, ensureCustomer, updateProductReview);
 
+router.patch(
+  "/:reviewId/status",
+  loginRequired,
+  ensureAdmin,
+  updateProductReviewStatus
+);
 router.delete("/:reviewId", loginRequired, ensureAdmin, deleteProductReview);
 
 export default router;

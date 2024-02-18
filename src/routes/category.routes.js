@@ -21,6 +21,6 @@ router.post("/", loginRequired, ensureAdmin, CreateCategory);
 
 router.get("/:name", getOneCategories);
 router.patch("/:name", loginRequired, ensureAdmin, updateOneCategory);
-router.delete("/:id", loginRequired, removeOneCategories);
+router.delete("/:id", loginRequired, ensureAdmin, removeOneCategories);
 
 export default router;

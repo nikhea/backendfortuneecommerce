@@ -83,7 +83,6 @@ export const createOwnerWishlist = async (req, res, next) => {
     const exist = user.wishlist.some(
       (item) => item.product.toString() === productId
     );
-    console.log(exist);
     if (exist) {
       let response = {
         success: "true",

@@ -11,16 +11,18 @@ import {
 } from "../controllers/product.contollers.js";
 import { filitersModels } from "../middleware/modelPagination.js";
 import Product from "../models/products.models.js";
+import { loginRequired } from "../middleware/authtication.js";
+import { ensureAdmin } from "../middleware/roleValidation.js";
 const router = express.Router();
 
 router.get("/all", getAllProduct);
 router.get("/", filitersModels(Product), getAllProducts);
 router.get("/tag", getProductsByTage);
-router.post("/", createProduct);
-router.patch("/:id", updateOneProduct);
-
-// router.get("/:id", getOneProduct);
 router.get("/:slug", getProductBySlug);
-router.delete("/:id", removeOneProduct);
+
+router.post("/", loginRequired, ensureAdmin, createProduct);
+router.patch("/:id", loginRequired, ensureAdmin, updateOneProduct);
+router.delete("/:id", loginRequired, ensureAdmin, removeOneProduct);
 
 export default router;
+// router.get("/:id", getOneProduct);
