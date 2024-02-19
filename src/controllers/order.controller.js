@@ -50,3 +50,47 @@ export const getOwnerOrder = async (req, res, next) => {
     return res.json(response);
   }
 };
+
+export const updateOrderDeliveryStatus = async (req, res, next) => {
+  const { status } = req.body;
+  const { id } = req.params;
+
+  try {
+    if (!status) {
+      let response = {
+        success: false,
+        statuscode: 404,
+        message: "delivery status is required",
+      };
+      return res.status(404).json(response);
+    }
+    let order = await Order.findById(id);
+
+    if (!order) {
+      let response = {
+        success: false,
+        statuscode: 404,
+        message: "order not found",
+      };
+      return res.status(404).json(response);
+    }
+    order.deliveryStatus = status;
+    await order.save();
+
+    let response = {
+      success: "true",
+      statuscode: 200,
+      // data: order,
+      message: "success",
+    };
+    return res.status(200).json(response);
+  } catch (error) {
+    let response = {
+      statuscode: 400,
+      data: [],
+      error: [error],
+      message: "something failed",
+    };
+    return res.json(response);
+  }
+};

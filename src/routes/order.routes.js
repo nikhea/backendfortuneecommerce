@@ -2,6 +2,7 @@ import express from "express";
 import {
   getOwnerOrder,
   getAllOrders,
+  updateOrderDeliveryStatus,
 } from "../controllers/order.controller.js";
 
 import { loginRequired } from "../middleware/authtication.js";

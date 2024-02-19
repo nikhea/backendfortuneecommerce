@@ -2,7 +2,6 @@ import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-
 dotenv.config();
 import Order from "../models/orders.models.js";
 import Cart from "../models/cart.models.js";
-// import getRawBody from "raw-body";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY);
@@ -50,9 +49,9 @@ export const checkOut = async (req, res) => {
   });
 
   const session = await stripe.checkout.sessions.create({
-    phone_number_collection: {
-      enabled: true,
-    },
+    // phone_number_collection: {
+    //   enabled: true,
+    // },
     line_items,
     customer: customer.id,
     mode: "payment",
@@ -108,9 +107,7 @@ const createOrder = async (res, customer, items, data) => {
 // let endpointSecret;
 const endpointSecret = process.env.ENDPOINT_SECRET;
 export const webHook = async (request, response) => {
-  console.log("helloooo");
   const sig = request.headers["stripe-signature"];
-  // const payload = await getRawBody(request.body);
   const payload = request.body;
   let data;
   let eventType;
@@ -142,58 +139,3 @@ export const webHook = async (request, response) => {
   }
   response.send().end();
 };
-
-// stripe.customers
-//   .retrieve(data.customer)
-//   .then((customer) => {
-//     console.log("customer", customer);
-//     console.log("data", data);
-//     console.log(items);
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-// switch (event.type) {
-//   case "payment_intent.succeeded":
-//     const paymentIntentSucceeded = event.data.object;
-//     // Then define and call a function to handle the event payment_intent.succeeded
-//     break;
-//   // ... handle other event types
-//   default:
-//     console.log(`Unhandled event type ${event.type}`);
-// }
-// const userId = JSON.parse(customer.metadata.userId);
-// const cartItems = JSON.parse(customer.metadata.items);
-// let p = {
-//   user: userId,
-//   items: cartItems,
-//   customerId: data.customer,
-//   paymentIntentId: data.payment_intent,
-//   subtotal: data.amount_subtotal,
-//   total: data.amount_subtotal,
-//   shipping: data.customer_details,
-//   paymentStatus: data.payment_status,
-//   status: data.status,
-// };
-// console.log(p);
-
-// console.log("customer", customer);
-// console.log("data", data);
-// console.log(items.data);
-// let p = {
-// user: userId,
-// items: cartItems,
-//   customerId: data.customer,
-//   paymentIntentId: data.payment_intent,
-//   subtotal: data.amount_subtotal,
-//   total: data.amount_subtotal,
-//   shipping: data.customer_details,
-//   paymentStatus: data.payment_status,
-//   deliveryStatus: data.delivery_Status,
-// };
-// console.log(p);
-// Set the Access-Control-Allow-Origin header to allow requests from 'https://fortune-ecommerce.vercel.app'
-// res.set(
-//   "Access-Control-Allow-Origin",
-//   "https://fortune-ecommerce.vercel.app"
-// );
