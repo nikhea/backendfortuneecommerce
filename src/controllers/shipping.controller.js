@@ -1,14 +1,14 @@
-import shipping from "../models/shipping.model.js";
+import Shipping from "../models/shipping.model.js";
 
 const findShippingByUserId = async (req, res) => {
   const user = req.user;
   try {
-    const shippingDetails = await shipping
-      .findOne({ user: user._id })
-      .populate({
+    const shippingDetails = await Shipping.findOne({ user: user._id }).populate(
+      {
         path: "user",
         select: "email firstname lastname role",
-      });
+      }
+    );
 
     if (!shippingDetails) {
       return res.status(404).json({
@@ -48,13 +48,13 @@ const createShipping = async (req, res, next) => {
       };
       return res.json(response);
     }
-    const userExist = await shipping.findOne({ user: user._id });
+    const userExist = await Shipping.findOne({ user: user._id });
     if (userExist)
       return res
         .status(400)
         .json({ message: "shipping details already exist" });
 
-    const newShipping = new shipping({
+    const newShipping = new Shipping({
       user: user._id,
       address: {
         country,
@@ -73,7 +73,8 @@ const createShipping = async (req, res, next) => {
         message: "shipping details could not be saved",
         data: savedShipping,
       });
-
+    user.shipping = savedShipping._id;
+    await user.save();
     return res.status(201).json({
       statuscode: 201,
       success: true,
@@ -95,7 +96,7 @@ const updateShipping = async (req, res, next) => {
   const user = req.user;
   const { country, state, city, street, postalCode, phone } = req.body;
   try {
-    const existingShipping = await shipping.findOne({ user: user._id });
+    const existingShipping = await Shipping.findOne({ user: user._id });
     if (!existingShipping) {
       return res.status(404).json({ message: "Shipping details not found" });
     }

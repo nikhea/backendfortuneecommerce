@@ -50,6 +50,10 @@ const UserSchema = new Schema(
       },
     ],
     profile: ProfileScheme,
+    shipping: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Shipping",
+    },
   },
   { timestamps: true }
 );

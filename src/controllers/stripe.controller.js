@@ -1,10 +1,14 @@
-import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import * as dotenv from "dotenv";
 dotenv.config();
 import Order from "../models/orders.models.js";
 import Cart from "../models/cart.models.js";
+// import Customer from "../models/customer.model.js";
+// import Shipping from "../models/shipping.model.js";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY);
+
+const endpointSecret = process.env.ENDPOINT_SECRET;
 
 export const checkOut = async (req, res) => {
   const { cartItem, user } = req.body;
@@ -37,7 +41,6 @@ export const checkOut = async (req, res) => {
         product_data: {
           name: item.product.name,
           images: [item.product.coverPhoto],
-          // description: item.product.description,
           metadata: {
             id: item._id,
           },
@@ -62,50 +65,55 @@ export const checkOut = async (req, res) => {
   res.send({ url: session.url });
 };
 
-const createOrder = async (res, customer, items, data) => {
+// const createOrFindCustomer = async (customer) => {
+//   const user = customer.metadata.userId;
+
+//   try {
+//     const existingCustomer = await Customer.findOne({ user });
+//     const address = await Shipping.findOne({ user });
+//     if (existingCustomer) {
+//       return existingCustomer._id;
+//     } else {
+//       const newCustomer = new Customer({
+//         user,
+//         address,
+//       });
+//       const savedCustomer = await newCustomer.save();
+//       return savedCustomer._id;
+//     }
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
+// };
+
+const createOrder = async (customer, data) => {
   const userId = customer.metadata.userId;
   const cartItems = JSON.parse(customer.metadata.items);
-  const newOrder = new Order({
-    user: userId,
-    customerId: data.customer,
-    paymentIntentId: data.payment_intent,
-    subtotal: data.amount_subtotal,
-    total: data.amount_subtotal,
-    shipping: data.customer_details,
-    paymentStatus: data.payment_status,
-    deliveryStatus: data.delivery_Status,
-    status: data.status,
-    items: cartItems,
-  });
-
   try {
+    const newOrder = new Order({
+      user: userId,
+      // customer: customerId,
+      customerId: data.customer,
+      paymentIntentId: data.payment_intent,
+      subtotal: data.amount_subtotal,
+      total: data.amount_subtotal,
+      shipping: data.customer_details,
+      paymentStatus: data.payment_status,
+      deliveryStatus: data.delivery_Status,
+      status: data.status,
+      items: cartItems,
+    });
     const order = await newOrder.save();
+    console.log(order, "orders");
     if (order) {
-      const cartItems = await Cart.find({ user: userId });
+      // const cartItems = await Cart.find({ user: userId });
       await Cart.deleteMany({ user: userId });
-      let response = {
-        success: "true",
-        statuscode: 200,
-        data: order,
-        message: "success",
-      };
-      // res.json(response);
-    } else {
-      let response = {
-        statuscode: 400,
-        data: [],
-        error: [error],
-        message: "something failed",
-      };
-      // return res.json(response);
     }
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };
 
-// let endpointSecret;
-const endpointSecret = process.env.ENDPOINT_SECRET;
 export const webHook = async (request, response) => {
   const sig = request.headers["stripe-signature"];
   const payload = request.body;
@@ -117,7 +125,6 @@ export const webHook = async (request, response) => {
       event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
     } catch (err) {
       response.status(400).send(`Webhook Error: ${err.message}`);
-      console.log(`Webhook Error: ${err.message}`);
       return;
     }
     data = event.data.object;
@@ -127,12 +134,16 @@ export const webHook = async (request, response) => {
     eventType = request.body.type;
   }
 
-  // Handle the event
   if (eventType === "checkout.session.completed") {
     try {
       const items = await stripe.checkout.sessions.listLineItems(data.id);
       const customer = await stripe.customers.retrieve(data.customer);
-      createOrder(response, customer, items, data);
+
+      // const customerId = await createOrFindCustomer(customer);
+      // console.log(customerId);
+      // if (customerId) {
+      createOrder(customer, data);
+      // }
     } catch (error) {
       console.log(error);
     }
