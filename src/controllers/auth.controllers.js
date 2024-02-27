@@ -68,6 +68,13 @@ export const createUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
+    if (!email || !password) {
+      let response = {
+        statuscode: 400,
+        message: "please enter all fields",
+      };
+      return res.json(response);
+    }
     const user = await User.findOne({ email });
     let isMatch = await user.comparePassword(password);
     if (isMatch) {
@@ -79,7 +86,7 @@ export const loginUser = async (req, res) => {
         lastname: user.lastname,
         username: user.username,
         role: user.role,
-        cart: user.cart,
+        // cart: user.cart,
         profile: user.profile,
         token: generateJWT(user._id),
       };

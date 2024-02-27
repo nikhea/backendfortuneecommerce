@@ -25,7 +25,7 @@ export const getMe = async (req, res, next) => {
   try {
     let user = await Users.findById(req.user.id)
       .select("-password -v")
-      .populate("cart");
+      .populate("cart shipping");
     let response = {
       success: "true",
       statuscode: 200,

@@ -18,6 +18,8 @@ import Order from "./routes/orders.routes.js";
 import StripeRoute from "./routes/stripe.routes.js";
 import StripeHookRoute from "./routes/stripeHook.routes.js";
 import Review from "./routes/review.routes.js";
+import Shipping from "./routes/shipping.routes.js";
+
 const app = express();
 app.get("/", (req, res) => {
   try {
@@ -61,6 +63,8 @@ app.use("/api/category", Category);
 app.use("/api/subcategory", SubCategory);
 app.use("/api/carts", Cart);
 app.use("/api/review", Review);
+app.use("/api/shipping", Shipping);
+
 app.use("/api/payment", StripeRoute);
 
 // api/stripe/webhook
