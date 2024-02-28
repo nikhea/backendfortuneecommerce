@@ -4,8 +4,14 @@ export const getAllOrders = async (req, res, next) => {
   const { user } = req;
   try {
     let order = await Order.find()
+      .populate({
+        path: "user",
+        select: "-password",
+        populate: {
+          path: "shipping",
+        },
+      })
       .populate("items.product")
-      .populate("user", "-password")
       .populate("items.product.category");
 
     let response = {

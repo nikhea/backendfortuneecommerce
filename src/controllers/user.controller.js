@@ -3,7 +3,9 @@ import moment from "moment";
 
 export const getUsers = async (req, res, next) => {
   try {
-    let users = await Users.find().select("-password -__v").populate("cart");
+    let users = await Users.find()
+      .select("-password -__v")
+      .populate("cart shipping");
     let response = {
       success: "true",
       statuscode: 200,

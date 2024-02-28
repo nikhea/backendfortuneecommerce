@@ -11,8 +11,8 @@ import { loginRequired } from "../middleware/authtication.js";
 import { ensureAdmin } from "../middleware/roleValidation.js";
 const router = express.Router();
 
-router.get("/", loginRequired, ensureAdmin, getUsers);
-
+router.get("/", getUsers);
+// loginRequired, ensureAdmin,
 router.get("/me", loginRequired, getMe);
 router.patch("/me/profile", loginRequired, UpdateUserProfile);
 router.patch("/me/profile/image", loginRequired, UpdateUserProfileImage);
