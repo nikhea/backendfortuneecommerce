@@ -3,7 +3,7 @@ import moment from "moment";
 
 export const getUsers = async (req, res, next) => {
   try {
-    let users = await Users.find()
+    let users = await Users.find({ role: "customer" })
       .select("-password -__v")
       .populate("cart shipping");
     let response = {
