@@ -8,6 +8,7 @@ import {
   getProductBySlug,
   updateOneProduct,
   removeOneProduct,
+  removeProductImage,
 } from "../controllers/product.contollers.js";
 import { filitersModels } from "../middleware/modelPagination.js";
 import Product from "../models/products.models.js";
@@ -23,6 +24,11 @@ router.get("/:slug", getProductBySlug);
 router.post("/", loginRequired, ensureAdmin, createProduct);
 router.patch("/:id", loginRequired, ensureAdmin, updateOneProduct);
 router.delete("/:id", loginRequired, ensureAdmin, removeOneProduct);
-
+router.delete(
+  "/:id/images/:assetId",
+  loginRequired,
+  ensureAdmin,
+  removeProductImage
+);
 export default router;
 // router.get("/:id", getOneProduct);

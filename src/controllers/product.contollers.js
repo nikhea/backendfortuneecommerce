@@ -26,6 +26,7 @@ export const createProduct = async (req, res, next) => {
       newArrival,
       specialOffer,
     } = req.body;
+    console.log(req.body);
     const slugURl = `${name} ${category} ${subcategory}`;
     const exsitCategory = await Category.findOne({ name: category });
     const exsitSubCategory = await Subcategory.findOne({ name: subcategory });
@@ -239,7 +240,6 @@ export const updateOneProduct = async (req, res, next) => {
     const product = await Products.findById(id);
     const categories = await Category.findOne({ name: category });
     const SubCategory = await Subcategory.findOne({ name: subcategory });
-    console.log(product.reviews);
     if (!product) {
       let response = {
         statuscode: 400,
@@ -322,3 +322,25 @@ export const removeOneProduct = async (req, res, next) => {
     return res.json(response);
   }
 };
+
+export const removeProductImage = async (req, res, next) => {
+  const productId = req.params.id;
+  const assetId = req.params.assetId;
+  try {
+    const product = await Products.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    // console.log(product.photos);
+    product.photos = product.photos.filter(
+      (image) => image.asset_id !== assetId
+    );
+    // product.photos = [];
+    await product.save();
+    res.json({ message: "Image removed successfully", product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+// https://res.cloudinary.com/djkqaqoj3/image/upload/v1686020635/photos-productImages-undefined-1686020113705/vlphmhinpimxrlm2xndi.jpg
+// https://res.cloudinary.com/djkqaqoj3/image/upload/v1686020679/photos-productImages-undefined-1686020113705/g2jy441kxfvhh2rmzvn9.jpg
