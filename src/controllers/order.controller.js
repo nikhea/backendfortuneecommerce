@@ -3,6 +3,8 @@ import Order from "../models/orders.models.js";
 export const getAllOrders = async (req, res, next) => {
   // const { user } = req;
   try {
+    const sortBy = req.query.sortBy || "createdAt";
+    const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
     let order = await Order.find()
       .populate({
         path: "user",
@@ -12,7 +14,8 @@ export const getAllOrders = async (req, res, next) => {
         },
       })
       .populate("items.product")
-      .populate("items.product.category");
+      .populate("items.product.category")
+      .sort({ [sortBy]: sortOrder });
 
     let response = {
       success: "true",

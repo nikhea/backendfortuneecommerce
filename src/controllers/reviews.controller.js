@@ -66,11 +66,14 @@ export const createReview = async (req, res) => {
 };
 
 export const getAllReview = async (req, res) => {
-  // const reviews = await Review.deleteMany();
+  const sortBy = req.query.sortBy || "createdAt";
+  const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
   try {
     const reviews = await Review.find()
       .populate("user", "-password")
-      .populate("product");
+      .populate("product")
+      .sort({ [sortBy]: sortOrder });
+
     if (reviews) {
       const response = {
         success: true,
@@ -99,12 +102,16 @@ export const getAllReview = async (req, res) => {
 };
 export const getProductReview = async (req, res) => {
   const { productId } = req.params;
-
+  const sortBy = req.query.sortBy || "createdAt";
+  const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
   try {
     const reviews = await Review.find({
       product: productId,
       published: true,
-    }).populate("user", "-password");
+    })
+      .populate("user", "-password")
+      .sort({ [sortBy]: sortOrder });
+
     if (reviews) {
       const response = {
         success: true,

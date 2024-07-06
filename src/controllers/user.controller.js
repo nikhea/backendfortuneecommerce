@@ -3,9 +3,13 @@ import moment from "moment";
 
 export const getUsers = async (req, res, next) => {
   try {
+    const sortBy = req.query.sortBy || "createdAt";
+    const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
     let users = await Users.find({ role: "customer" })
       .select("-password -__v")
-      .populate("cart shipping");
+      .populate("cart shipping")
+      .sort({ [sortBy]: sortOrder });
+
     let response = {
       success: "true",
       statuscode: 200,

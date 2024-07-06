@@ -46,9 +46,27 @@ export const CreateSubCategory = async (req, res) => {
 
 export const getAllSubCategories = async (req, res) => {
   try {
-    const subcategories = await Subcategory.find()
+    const { categoryName } = req.query;
+
+    let query = {};
+    if (categoryName) {
+      const category = await Category.findOne({ name: categoryName });
+      if (category) {
+        query.category = category._id;
+      } else {
+        return res.json({
+          success: "false",
+          statuscode: 404,
+          data: [],
+          message: "Category not found",
+        });
+      }
+    }
+
+    const subcategories = await Subcategory.find(query)
       .populate("category")
       .populate("products");
+
     let response = {
       success: "true",
       statuscode: 200,
@@ -60,12 +78,35 @@ export const getAllSubCategories = async (req, res) => {
     let response = {
       statuscode: 500,
       data: [],
-      error: [error],
+      error: [error.message],
       message: "something failed",
     };
     return res.json(response);
   }
 };
+
+// export const getAllSubCategories = async (req, res) => {
+//   try {
+//     const subcategories = await Subcategory.find()
+//       .populate("category")
+//       .populate("products");
+//     let response = {
+//       success: "true",
+//       statuscode: 200,
+//       data: subcategories,
+//       message: "success",
+//     };
+//     res.json(response);
+//   } catch (error) {
+//     let response = {
+//       statuscode: 500,
+//       data: [],
+//       error: [error],
+//       message: "something failed",
+//     };
+//     return res.json(response);
+//   }
+// };
 export const getAllSubCategoriesPagination = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 2;
@@ -204,6 +245,29 @@ export const removeOneSubCategories = async (req, res, next) => {
     return res.json(response);
   }
 };
+
+// export const getAllSubCategories = async (req, res) => {
+//   try {
+//     const subcategories = await Subcategory.find()
+//       .populate("category")
+//       .populate("products");
+//     let response = {
+//       success: "true",
+//       statuscode: 200,
+//       data: subcategories,
+//       message: "success",
+//     };
+//     res.json(response);
+//   } catch (error) {
+//     let response = {
+//       statuscode: 500,
+//       data: [],
+//       error: [error],
+//       message: "something failed",
+//     };
+//     return res.json(response);
+//   }
+// };
 
 // export const getAllSubCategoriesPagination = async (req, res) => {
 //   const page = parseInt(req.query.page) || 1;

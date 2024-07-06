@@ -78,9 +78,13 @@ export const createProduct = async (req, res, next) => {
 };
 export const getAllProduct = async (req, res) => {
   try {
+    const sortBy = req.query.sortBy || "createdAt";
+    const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
     const products = await Products.find()
       .populate("category")
-      .populate("subcategory");
+      .populate("subcategory")
+      .sort({ [sortBy]: sortOrder });
+
     const extractedData = products.map((item) => ({
       _id: item._id,
       slug: item.slug,
